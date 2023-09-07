@@ -77,7 +77,7 @@ module Processor (input logic   Clk,     // Internal
      HexDriver HexA(
         .clk(Clk),
         .reset(Reset_SH),
-        .in({4'h0, 4'h0, B[3:0], A[3:0]}),
+        .in({B[7:4], A[7:4], B[3:0], A[3:0]}),
         .hex_seg(hex_seg),
         .hex_grid(hex_grid)
      );
@@ -87,9 +87,10 @@ module Processor (input logic   Clk,     // Internal
 	 //Note: S stands for SYNCHRONIZED, H stands for active HIGH
 	 //Note: We can invert the levels inside the port assignments
 	 sync button_sync[3:0] (Clk, {Reset, LoadA, LoadB, Execute}, {Reset_SH, LoadA_SH, LoadB_SH, Execute_SH});
-	 sync Din_sync[3:0] (Clk, Din, Din_S);
+	 sync Din_sync[7:0] (Clk, Din, Din_S);
 	 sync F_sync[2:0] (Clk, F, F_S);
 	 sync R_sync[1:0] (Clk, R, R_S);
 	  
 endmodule
+
 
