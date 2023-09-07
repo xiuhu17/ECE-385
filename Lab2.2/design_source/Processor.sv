@@ -10,11 +10,11 @@ module Processor (input logic   Clk,     // Internal
                                 LoadA,   // Push button 1
                                 LoadB,   // Push button 2
                                 Execute, // Push button 3
-                  input  logic [3:0]  Din,     // input data
+                  input  logic [7:0]  Din,     // input data
                   input  logic [2:0]  F,       // Function select 
                   input  logic [1:0]  R,       // Routing select
                   output logic [3:0]  LED,     // DEBUG
-                  output logic [3:0]  Aval,    // DEBUG
+                  output logic [7:0]  Aval,    // DEBUG
                                 Bval,    // DEBUG
                   output logic [7:0] hex_seg, // Hex display control
                   output logic [3:0] hex_grid); // Hex display control
@@ -26,7 +26,7 @@ module Processor (input logic   Clk,     // Internal
 	 logic Ld_A, Ld_B, newA, newB, bitA, bitB, Shift_En,
 	       F_A_B;
 	 logic opA, opB;
-	 logic [3:0] A, B, Din_S;
+	 logic [7:0] A, B, Din_S;
 	 
 	 
 	 //We can use the "assign" statement to do simple combinational logic
@@ -92,3 +92,4 @@ module Processor (input logic   Clk,     // Internal
 	 sync R_sync[1:0] (Clk, R, R_S);
 	  
 endmodule
+

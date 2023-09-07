@@ -8,17 +8,17 @@ timeprecision 1ns;
 // instantiated as a submodule in testbench.
 logic Clk = 0;
 logic Reset, LoadA, LoadB, Execute;
-logic [3:0] Din;
+logic [7:0] Din;
 logic [2:0] F;
 logic [1:0] R;
 logic [3:0] LED;
-logic [3:0] Aval,
+logic [7:0] Aval,
 		 Bval;
 logic [7:0] hex_seg;
 logic [3:0] hex_grid;
 
 // To store expected results
-logic [3:0] ans_1a, ans_2b;
+logic [7:0] ans_1a, ans_2b;
 				
 // A counter to count the instances where simulation results
 // do no match with expected results
@@ -57,22 +57,22 @@ R = 2'b10;
 #2 LoadA = 0;
 
 #2 LoadB = 1;	// Toggle LoadB
-	Din = 4'h2;	// Change Din
+	Din = 8'h2;	// Change Din
 #2 LoadB = 0;
-	Din = 4'h0;	// Change Din again
+	Din = 8'h0;	// Change Din again
 
 #2 Execute = 1;	// Toggle Execute
    
 #22 Execute = 0;
-    ans_1a = (4'hB ^ 4'h2); // Expected result of 1st cycle
+    ans_1a = (8'hB ^ 8'h2); // Expected result of 1st cycle
     // Aval is expected to be 4'hB XOR 4'h2
     // Bval is expected to be the original 4'h2
     if (Aval != ans_1a)
 	 ErrorCnt++;
-    if (Bval != 4'h2)
+    if (Bval != 8'h2)
 	 ErrorCnt++;
     F = 3'b110;	// Change F and R
-    R = 2'b01;
+    R = 2'b01;  
 
 #2 Execute = 1;	// Toggle Execute
 #2 Execute = 0;
@@ -82,7 +82,7 @@ R = 2'b10;
     // Bval is expected to be the answer of 1st cycle XNOR 4'h2
     if (Aval != ans_1a)	
 	 ErrorCnt++;
-    ans_2b = ~(ans_1a ^ 4'h2); // Expected result of 2nd  cycle
+    ans_2b = ~(ans_1a ^ 8'h2); // Expected result of 2nd  cycle
     if (Bval != ans_2b)
 	 ErrorCnt++;
     R = 2'b11;
@@ -101,3 +101,4 @@ else
 	$display("%d error(s) detected. Try again!", ErrorCnt);
 end
 endmodule
+
