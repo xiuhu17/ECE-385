@@ -59,14 +59,13 @@ module lookahead_adder (
     endmodule
 
     logic [3:0] C16, P16, G16;
-    logic P_out, G_out;
 
     four_cla f0(.A(A[3:0]), .B(B[3:0]), .Cin(C16[0]), .P_G(P16[0]), .G_G(G16[0]), .S[3:0](S[3:0]));
     four_cla f1(.A(A[7:4]), .B(B[7:4]), .Cin(C16[1]), .P_G(P16[1]), .G_G(G16[1]), .S[3:0](S[7:4]));
     four_cla f2(.A(A[11:8]), .B(B[11:8]), .Cin(C16[2]), .P_G(P16[2]), .G_G(G16[2]), .S[3:0](S[11:8]));
-    four_cla f3(.A(A[16:12]), .B(B[16:12]), .Cin(C16[3]), .P_G(P16[3]), .G_G(G16[3]), .S[3:0](S[15:12]));
+    four_cla f3(.A(A[15:12]), .B(B[15:12]), .Cin(C16[3]), .P_G(P16[3]), .G_G(G16[3]), .S[3:0](S[15:12]));
 
-    group gsixteen(.Cin(cin), .P(P16), .G(G16), .C(C16), .P_G(P_out), .G_G(G_out));
+    group gsixteen(.Cin(cin), .P(P16), .G(G16), .C(C16));
 
     assign cout = (cin & P16[0] & P16[1] & P16[2] & P16[3]) | (G16[0] & P16[1] & P16[2] & P16[3]) | (G16[1] & P16[2] & P16[3]) | (G16[2] & P16[3]) | (G16[3]);
 
