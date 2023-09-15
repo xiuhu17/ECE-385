@@ -34,15 +34,15 @@ module adder_toplevel  (input Clk, Reset_Clear, Run_Accumulate,
 		mux2_1_17 m_mux ( .S(Load), .A_In(SW[15:0]), .B_In(S[16:0]), .Q_Out(In[16:0]) );
 		
 		// Register unit that holds the accumulated sum
-		reg_17 reg_unit	( .*, .Reset(Reset_Clear), .Load(Load), .D(In[16:0]), .Data_Out(Out[16:0]));
+		reg_17 reg_unit	( .*, .Reset(Reset_Clear), .D(In[16:0]), .Data_Out(Out[16:0]));
 
 		// Addition unit
 
-		ripple_adder adder		(.A(SW[15:0]), .B(Out[15:0]), .cin(1'b0), .cout(S[16]), .S(S[15:0]) );
+		//ripple_adder adder		(.A(SW[15:0]), .B(Out[15:0]), .cin(1'b0), .cout(S[16]), .S(S[15:0]) );
 		
 		//lookahead_adder adderla	(.A(SW[15:0]), .B(Out[15:0]), .cin(1'b0), .cout(S[16]), .S(S[15:0]) );
 		
-		//select_adder adders	(.A(SW[15:0]), .B(Out[15:0]), .cin(1'b0), .cout(S[16]), .S(S[15:0]) );
+		select_adder adders	(.A(SW[15:0]), .B(Out[15:0]), .cin(1'b0), .cout(S[16]), .S(S[15:0]) );
 
 
 		// Hex units that display contents of SW and register R in hex

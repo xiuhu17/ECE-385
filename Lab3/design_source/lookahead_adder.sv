@@ -43,8 +43,8 @@ module lookahead_adder (
     module four_cla (
         input logic [3:0] A, B,
         input  logic Cin,
-        output logic P_G, G_G
-        output logic [3:0] S,
+        output logic P_G, G_G,
+        output logic [3:0] S
     );
     
     logic [3:0] C, P, G;

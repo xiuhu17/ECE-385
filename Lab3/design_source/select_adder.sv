@@ -46,8 +46,8 @@ module select_adder (
         logic Co_0, Co_1;
         logic [3:0] S_0, S_1;
 
-        four_cra f0(.A(A), .B(B), .C(1'b0), .Co(Co_0), .S(S_0));
-        four_cra f1(.A(A), .B(B), .C(1'b1), .Co(Co_1), .S(S_1));
+        four_cra f0(.A(A), .B(B), .Ci(1'b0), .Co(Co_0), .S(S_0));
+        four_cra f1(.A(A), .B(B), .Ci(1'b1), .Co(Co_1), .S(S_1));
 
         always_comb
 		begin
@@ -60,10 +60,10 @@ module select_adder (
 
     endmodule
 
-    loigc [2:0] Ct;
+    logic [2:0] Ct;
     four_cra        ff0(.A(A[3:0]), .B(B[3:0]), .Ci(cin), .Co(Ct[0]), .S(S[3:0]));
-    two_four_sel    tf1(.A(A[7:4]), .B(B[7:4]), .S_sel_in(Ct[0]), .S_sel_out(Ct[1]), .S(S[7:4]));
-    two_four_sel    tf2(.A(A[11:8]), .B(B[11:8]), .S_sel_in(Ct[1]), .S_sel_out(Ct[2]), .S(S[11:8]));
-    two_four_sel    tf3(.A(A[15:12]), .B(B[15:12]), .S_sel_in(Ct[2]), .S_sel_out(cout), .S(S[15:12]));
+    two_four_sel    tf1(.A(A[7:4]), .B(B[7:4]), .C_sel_in(Ct[0]), .C_sel_out(Ct[1]), .S(S[7:4]));
+    two_four_sel    tf2(.A(A[11:8]), .B(B[11:8]), .C_sel_in(Ct[1]), .C_sel_out(Ct[2]), .S(S[11:8]));
+    two_four_sel    tf3(.A(A[15:12]), .B(B[15:12]), .C_sel_in(Ct[2]), .C_sel_out(cout), .S(S[15:12]));
 
 endmodule
