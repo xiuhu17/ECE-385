@@ -22,6 +22,7 @@ module Processor (input logic   Clk,
     logic Sub_Add;
     logic [7:0] Adder_Out;
     logic Adder_Out_X;
+    logic Clear_A;
 
     
     // for debug
@@ -33,7 +34,7 @@ module Processor (input logic   Clk,
     reg_8 regA (
               .Clk(Clk), .Reset(ClearA_LoadB_sync), 
               .Shift(ShiftA), .Adder_en(Adder_en_A),
-              .Shift_In(Xout), .Adder_en_In(Adder_Out[7:0]), .isB(1'b0), 
+              .Shift_In(Xout), .Adder_en_In(Adder_Out[7:0]), .isB(1'b0), .Clear_A(Clear_A),
               .Shift_Out(Aout), .Data_Out(A)
     );
 
@@ -48,7 +49,7 @@ module Processor (input logic   Clk,
     // for flipflop 
     flipflop fliflopx (
                 .Clk(Clk), .Reset(ClearA_LoadB_sync), 
-                 .Shift(ShiftX), .Adder_en(Adder_en_X),
+                 .Shift(ShiftX), .Adder_en(Adder_en_X), .Clear_A(Clear_A),
                 .Adder_en_In(Adder_Out_X),
                 .Shift_Out(Xout), .Data_Out(X)
     );
@@ -56,8 +57,8 @@ module Processor (input logic   Clk,
 
     // for control unit
     control ctrl(
-                .Clk(Clk), .Run(Run_sync), .ClearA_LoadB(ClearA_LoadB_sync), .Reset(ClearA_LoadB_sync),
-                .M(Bout),
+                .Clk(Clk), .Run(Run_sync), .ClearA_LoadB(ClearA_LoadB_sync), .Reset(ClearA_LoadB_sync), .Clear_A(Clear_A),
+                .M(Bout), 
                  .ShiftA(ShiftA), .Adder_en_A(Adder_en_A),
                  .ShiftB(ShiftB), .Adder_en_B(Adder_en_B),
                  .ShiftX(ShiftX), .Adder_en_X(Adder_en_X),

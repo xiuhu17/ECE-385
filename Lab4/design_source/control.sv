@@ -6,12 +6,13 @@ module control (input logic Clk,
                 output logic ShiftA, Adder_en_A, 
                 output logic ShiftB, Adder_en_B, 
                 output logic ShiftX, Adder_en_X, 
-                output logic Sub_Add                // 1 sub 0 Add
+                output logic Sub_Add,
+                output logic Clear_A                // 1 sub 0 Add
                 );
     
     // enum to layout different stage
     // curr_state and next_state
-    enum logic [4:0] {A, B, B_, C, C_, D,  D_, E, E_, F, F_, G, G_, H, H_, I, I_ ,J} curr_state, next_state; 
+    enum logic [4:0] {A, B, B_, C, C_, D,  D_, E, E_, F, F_, G, G_, H, H_, I, I_ ,J, prev_B} curr_state, next_state; 
 
 
     // synchronize reset 
@@ -35,9 +36,11 @@ module control (input logic Clk,
         next_state = curr_state;    // default action
         unique case (curr_state) 
 
+
             A :    if (Run)
-                       next_state = B;
+                       next_state = prev_B;
             // eight states for eight shifts
+            prev_B: next_state = B;
             B :    next_state = B_;
             B_:     next_state = C;
             C :    next_state = C_;
@@ -73,7 +76,23 @@ module control (input logic Clk,
                     
                     ShiftX = 1'b0;
                     Adder_en_X = 1'b0;
+
+                    Clear_A = 1'b0;
                 end    
+ 
+            prev_B :
+                begin
+                    ShiftA = 1'b0;
+                    Adder_en_A = 1'b0;
+
+                    ShiftB = 1'b0;
+                    Adder_en_B = 1'b0;
+                    
+                    ShiftX = 1'b0;
+                    Adder_en_X = 1'b0;
+
+                    Clear_A = 1'b1;
+                end  
             B, C, D, E, F, G, H:  // Adder_en_A base on M, Adder_en_X base on M
                 begin
                     ShiftA = 1'b0;
@@ -91,6 +110,8 @@ module control (input logic Clk,
                         Adder_en_A = 1'b0;
                         Adder_en_X = 1'b0;
                     end 
+
+                    Clear_A = 1'b0;
                 end
             I:  // for possible sub
                 begin
@@ -111,6 +132,8 @@ module control (input logic Clk,
                         Adder_en_A = 1'b0;
                         Adder_en_X = 1'b0;
                     end 
+
+                    Clear_A = 1'b0;
                 end
             J:
                 begin
@@ -125,6 +148,9 @@ module control (input logic Clk,
 
                     ShiftX = 1'b0;
                     Adder_en_X = 1'b0;
+
+
+                    Clear_A = 1'b0;
                 end
             default:   // for shift 
                 begin 
@@ -137,6 +163,9 @@ module control (input logic Clk,
                     
                     ShiftX = 1'b1;
                     Adder_en_X = 1'b0;
+
+
+                    Clear_A = 1'b0;
                 end
 
         endcase 
