@@ -1,16 +1,18 @@
-module control (input logic Run,
+module control (input logic Clk,
+                input logic Run,
                 input logic ClearA_LoadB,
                 input logic Reset,
-                input logic [1:0] B, 
-                output logic ClearA, LoadA, ShiftA, 
-                output logic ClearB, LoadB, ShiftB, 
-                output logic ClearX, LoadX, ShiftX,
+                input logic M, 
+                output logic ClearA, LoadA, ShiftA, Adder_en_A, 
+                output logic ClearB, LoadB, ShiftB, Adder_en_B, 
+                output logic ClearX, LoadX, ShiftX, Adder_en_X, 
                 output logic Sub_Add                // 1 sub 0 Add
                 );
     
     // enum to layout different stage
     // curr_state and next_state
-    enum logic [3:0] {A, B, C, D,  E, F, G,  H, I, ,J} curr_state, next_state; 
+    enum logic [4:0] {A, B, B_, C, C_, D,  D_, E, E_, F, F_, G, G_, H, H_, I, I_ ,J} curr_state, next_state; 
+
 
     // synchronize reset 
     // updates flip flop, current state is the only one
@@ -33,37 +35,46 @@ module control (input logic Run,
             A :    if (Run)
                        next_state = B;
             // eight states for eight shifts
-            B :    next_state = C;
-            C :     next_state = D;
-            D :    next_state = E;
-            E :    next_state = F;
-            F :     next_state = G;
-            G :    next_state = H;
-            H :    next_state = I;
-            I :    next_state = J;
-            J :    if (~Run)        // according to the Q/A, we need one Run per cycle, only Run is low, we go back to A
+            B :    next_state = B_;
+            B_:     next_state = C;
+            C :    next_state = C_;
+            C_:     next_state = D;
+            D :    next_state = D_;
+            D_:     next_state = E;
+            E :    next_state = E_;
+            E_:     next_state = F;
+            F :    next_state = F_;
+            F_:     next_state = G;
+            G :    next_state = G_;
+            G_:     next_state = H;
+            H :    next_state = H_;
+            H_:     next_state = I;
+            I :    next_state = I_;
+            I_:     next_state = J;
+            J :    if (~Run)                // according to the Q/A, we need one Run per cycle, only Run is low, we go back to A
                        next_state = A;
 
         endcase 
 
         case (curr_state)                   // get the signal output, base on updated curr_state, third part
-            A : 
+            A:  // clear A, Load B, clear X
                 begin
                     ClearA = ClearA_LoadB;
                     LoadA = 1'b0;
                     ShiftA = 1'b0;
+                    Adder_en_A = 1'b0;
 
                     ClearB = 1'b0;
                     LoadB = ClearA_LoadB;
-                    ShiftB = 1'b0; 
-
+                    ShiftB = 1'b0;
+                    Adder_en_B = 1'b0;
+                    
                     ClearX = ClearA_LoadB;
-                    LoadX  = 1'b0;     
+                    LoadX = 1'b0;
                     ShiftX = 1'b0;
-
-                    Sub_Add = 1'b0;         // this signal does not matter
-                end 
-            J :                             // wait and do nothing
+                    Adder_en_X = 1'b0;
+                end    
+            B, C, D, E, F, G, H:  // Adder_en_A base on M, Adder_en_X base on M
                 begin
                     ClearA = 1'b0;
                     LoadA = 1'b0;
@@ -71,62 +82,81 @@ module control (input logic Run,
 
                     ClearB = 1'b0;
                     LoadB = 1'b0;
-                    ShiftB = 1'b0; 
+                    ShiftB = 1'b0;
+                    Adder_en_B = 1'b0;
 
                     ClearX = 1'b0;
                     LoadX = 1'b0;
                     ShiftX = 1'b0;
 
-                    Sub_Add = 1'b0;         // this signal does not matter
+                    if (M) begin
+                        Sub_Add = 1'b0;         // Add
+                        Adder_en_A = 1'b1;
+                        Adder_en_X = 1'b1;
+                    end else begin 
+                        Adder_en_A = 1'b0;
+                        Adder_en_X = 1'b0;
+                    end 
                 end
-            I :                    // last shift, we need to check whther it is SUB
+            I:  // for possible sub
                 begin
                     ClearA = 1'b0;
+                    LoadA = 1'b0;
+                    ShiftA = 1'b0;
+
+                    ClearB = 1'b0;
+                    LoadB = 1'b0;
+                    ShiftB = 1'b0;
+                    Adder_en_B = 1'b0;
+
+                    ClearX = 1'b0;
+                    LoadX = 1'b0;
+                    ShiftX = 1'b0;
+
+                    if (M) begin
+                        Sub_Add = 1'b1;         // Sub
+                        Adder_en_A = 1'b1;
+                        Adder_en_X = 1'b1;
+                    end else begin 
+                        Adder_en_A = 1'b0;
+                        Adder_en_X = 1'b0;
+                    end 
+                end
+            J:
+                begin
+                    ClearA = 1'b0;
+                    LoadA = 1'b0;
+                    ShiftA = 1'b0;
+                    Adder_en_A = 1'b0;
+
+                    ClearB = 1'b0;
+                    LoadB = 1'b0;
+                    ShiftB = 1'b0;
+                    Adder_en_B = 1'b0;
+                    
+                    ClearX = 1'b0;
+                    LoadX = 1'b0;
+                    ShiftX = 1'b0;
+                    Adder_en_X = 1'b0;
+                end
+            default:   // for shift 
+                begin 
+                    ClearA = 1'b0;
+                    LoadA = 1'b0;
+                    ShiftA = 1'b1;
+                    Adder_en_A = 1'b0;
 
                     ClearB = 1'b0;
                     LoadB = 1'b0;
                     ShiftB = 1'b1;
-
+                    Adder_en_B = 1'b0;
+                    
                     ClearX = 1'b0;
-
-                    if (M) begin   
-                        LoadA = 1'b1;
-                        ShiftA = 1'b0; 
-                        LoadX = 1'b1;
-                        ShiftX = 1'b0;
-                    end else begin
-                        LoadA = 1'b0;
-                        ShiftA = 1'b1; 
-                        LoadX = 1'b0;
-                        ShiftX = 1'b1;
-                    end
-
-                    Sub_Add = 1'b1;         // Sub
+                    LoadX = 1'b0;
+                    ShiftX = 1'b1;
+                    Adder_en_X = 1'b0;
                 end
-            default: 
-                begin
-                    ClearA = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = 1'b0;
-                    ShiftB = 1'b1;
-
-                    ClearX = 1'b0;
-
-                    if (M) begin   
-                        LoadA = 1'b1;
-                        ShiftA = 1'b0; 
-                        LoadX = 1'b1;
-                        ShiftX = 1'b0;
-                    end else begin
-                        LoadA = 1'b0;
-                        ShiftA = 1'b1; 
-                        LoadX = 1'b0;
-                        ShiftX = 1'b1;
-                    end
-
-                    Sub_Add = 1'b0;         // Add
-                end
         endcase 
     end 
 
