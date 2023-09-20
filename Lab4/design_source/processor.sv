@@ -16,12 +16,13 @@ module Processor (input logic   Clk,
     logic [7:0] A, B;
     logic Aout, Bout, Xout;
     logic X;
-    logic ClearA, LoadA, ShiftA, Adder_en_A;
-    logic ClearB, LoadB, ShiftB, Adder_en_B;
-    logic ClearX, LoadX, ShiftX, Adder_en_X;
+    logic ShiftA, Adder_en_A;
+    logic ShiftB, Adder_en_B;
+    logic ShiftX, Adder_en_X;
     logic Sub_Add;
     logic [7:0] Adder_Out;
     logic Adder_Out_X;
+
     
     // for debug
     assign Aval = A;
@@ -31,14 +32,14 @@ module Processor (input logic   Clk,
     // for register 
     reg_8 regA (
               .Clk(Clk), .Reset(ClearA_LoadB_sync), 
-              .Clear(ClearA), .Load(LoadA), .Shift(ShiftA), .Adder_en(Adder_en_A),
-              .Shift_In(Xout), .Adder_en_In(Adder_Out[7:0]), 
+              .Shift(ShiftA), .Adder_en(Adder_en_A),
+              .Shift_In(Xout), .Adder_en_In(Adder_Out[7:0]), .isB(1'b0), 
               .Shift_Out(Aout), .Data_Out(A)
     );
 
     reg_8 regB (
                 .Clk(Clk), .Reset(ClearA_LoadB_sync), 
-                .Clear(ClearB), .Load(LoadB), .Shift(ShiftB), .Adder_en(Adder_en_B),
+                .Shift(ShiftB), .Adder_en(Adder_en_B), .isB(1'b1), 
                 .Load_In(SW_syn),
                 .Shift_In(Aout), 
                 .Shift_Out(Bout), .Data_Out(B)
@@ -47,7 +48,7 @@ module Processor (input logic   Clk,
     // for flipflop 
     flipflop fliflopx (
                 .Clk(Clk), .Reset(ClearA_LoadB_sync), 
-                .Clear(ClearX), .Load(LoadX), .Shift(ShiftX), .Adder_en(Adder_en_X),
+                 .Shift(ShiftX), .Adder_en(Adder_en_X),
                 .Adder_en_In(Adder_Out_X),
                 .Shift_Out(Xout), .Data_Out(X)
     );
@@ -57,9 +58,9 @@ module Processor (input logic   Clk,
     control ctrl(
                 .Clk(Clk), .Run(Run_sync), .ClearA_LoadB(ClearA_LoadB_sync), .Reset(ClearA_LoadB_sync),
                 .M(Bout),
-                .ClearA(ClearA), .LoadA(LoadA), .ShiftA(ShiftA), .Adder_en_A(Adder_en_A),
-                .ClearB(ClearB), .LoadB(LoadB), .ShiftB(ShiftB), .Adder_en_B(Adder_en_B),
-                .ClearX(ClearX), .LoadX(LoadX), .ShiftX(ShiftX), .Adder_en_X(Adder_en_X),
+                 .ShiftA(ShiftA), .Adder_en_A(Adder_en_A),
+                 .ShiftB(ShiftB), .Adder_en_B(Adder_en_B),
+                 .ShiftX(ShiftX), .Adder_en_X(Adder_en_X),
                 .Sub_Add(Sub_Add)
                 );
     

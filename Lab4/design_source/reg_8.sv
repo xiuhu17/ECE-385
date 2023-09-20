@@ -1,5 +1,5 @@
 module reg_8 (input  logic Clk, Reset, Shift_In, 
-			  input  logic Clear, Load, Shift, Adder_en,
+			  input  logic Shift, Adder_en, isB,
               input  logic [7:0]  Load_In,
 			  input  logic [7:0]  Adder_en_In,
               output logic Shift_Out,
@@ -8,11 +8,13 @@ module reg_8 (input  logic Clk, Reset, Shift_In,
     always_ff @ (posedge Clk)
     begin
 	 	 if (Reset) //notice, this is a sycnrhonous reset, which is recommended on the FPGA
-			  Data_Out <= 8'h0;
-		 else if (Clear)
-		 	  Data_Out <= 8'b0;
-		 else if (Load)
-			  Data_Out <= Load_In;
+		 			begin 
+						if (isB) begin 
+							Data_Out <= Load_In;
+						end else begin 
+							Data_Out <= 8'h0;
+						end 
+					end 
 		 else if (Adder_en) 
 		 	  Data_Out <= Adder_en_In;
 		 else if (Shift)
@@ -29,7 +31,7 @@ endmodule
 
 
 module flipflop (input  logic Clk, Reset, Shift_In, 
-			  input  logic Clear, Load, Shift, Adder_en,
+			  input  logic   Shift, Adder_en,
               input  logic   Load_In,
 			  input  logic   Adder_en_In,
               output logic Shift_Out,
@@ -38,11 +40,7 @@ module flipflop (input  logic Clk, Reset, Shift_In,
     always_ff @ (posedge Clk)
     begin
 	 	 if (Reset) //notice, this is a sycnrhonous reset, which is recommended on the FPGA
-			  Data_Out <= 1'h0;
-		 else if (Clear)
-		 	  Data_Out <= 1'b0;
-		 else if (Load)
-			  Data_Out <= Load_In;
+			Data_Out <= 1'h0;
 		 else if (Adder_en) 
 		 	  Data_Out <= Adder_en_In;
 		 else if (Shift)

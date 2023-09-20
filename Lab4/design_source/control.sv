@@ -3,9 +3,9 @@ module control (input logic Clk,
                 input logic ClearA_LoadB,
                 input logic Reset,
                 input logic M, 
-                output logic ClearA, LoadA, ShiftA, Adder_en_A, 
-                output logic ClearB, LoadB, ShiftB, Adder_en_B, 
-                output logic ClearX, LoadX, ShiftX, Adder_en_X, 
+                output logic ShiftA, Adder_en_A, 
+                output logic ShiftB, Adder_en_B, 
+                output logic ShiftX, Adder_en_X, 
                 output logic Sub_Add                // 1 sub 0 Add
                 );
     
@@ -18,6 +18,7 @@ module control (input logic Clk,
     // updates flip flop, current state is the only one
     // it always load the output next_state from combinational block into this sequential block 
     // update the curr_state base on previous cycle's next_state or reset, second part
+    // accept [previos's next_state]/[reset], use it to update its [current curr_state] 
     always_ff @ (posedge Clk)  
     begin
         if (Reset)
@@ -26,9 +27,11 @@ module control (input logic Clk,
             curr_state <= next_state;
     end
 
+
+    // use [current curr_state] to update [next_state which is for next_cycle]
     // combinational logic 
     always_comb
-    begin                           // get the next_state, base on curr_state, for next cycle's curr_state, first part 
+    begin                           
         next_state = curr_state;    // default action
         unique case (curr_state) 
 
@@ -56,37 +59,28 @@ module control (input logic Clk,
 
         endcase 
 
+
+        // use updated [current curr_state] to do the corrosponding signal
         case (curr_state)                   // get the signal output, base on updated curr_state, third part
             A:  // clear A, Load B, clear X
+                // if not run, then stay in this state forever 
                 begin
-                    ClearA = ClearA_LoadB;
-                    LoadA = 1'b0;
                     ShiftA = 1'b0;
                     Adder_en_A = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = ClearA_LoadB;
                     ShiftB = 1'b0;
                     Adder_en_B = 1'b0;
                     
-                    ClearX = ClearA_LoadB;
-                    LoadX = 1'b0;
                     ShiftX = 1'b0;
                     Adder_en_X = 1'b0;
                 end    
             B, C, D, E, F, G, H:  // Adder_en_A base on M, Adder_en_X base on M
                 begin
-                    ClearA = 1'b0;
-                    LoadA = 1'b0;
                     ShiftA = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = 1'b0;
                     ShiftB = 1'b0;
                     Adder_en_B = 1'b0;
 
-                    ClearX = 1'b0;
-                    LoadX = 1'b0;
                     ShiftX = 1'b0;
 
                     if (M) begin
@@ -100,17 +94,13 @@ module control (input logic Clk,
                 end
             I:  // for possible sub
                 begin
-                    ClearA = 1'b0;
-                    LoadA = 1'b0;
+
                     ShiftA = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = 1'b0;
+
                     ShiftB = 1'b0;
                     Adder_en_B = 1'b0;
 
-                    ClearX = 1'b0;
-                    LoadX = 1'b0;
                     ShiftX = 1'b0;
 
                     if (M) begin
@@ -124,35 +114,27 @@ module control (input logic Clk,
                 end
             J:
                 begin
-                    ClearA = 1'b0;
-                    LoadA = 1'b0;
+
                     ShiftA = 1'b0;
                     Adder_en_A = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = 1'b0;
+
                     ShiftB = 1'b0;
                     Adder_en_B = 1'b0;
                     
-                    ClearX = 1'b0;
-                    LoadX = 1'b0;
+
                     ShiftX = 1'b0;
                     Adder_en_X = 1'b0;
                 end
             default:   // for shift 
                 begin 
-                    ClearA = 1'b0;
-                    LoadA = 1'b0;
+
                     ShiftA = 1'b1;
                     Adder_en_A = 1'b0;
 
-                    ClearB = 1'b0;
-                    LoadB = 1'b0;
                     ShiftB = 1'b1;
                     Adder_en_B = 1'b0;
                     
-                    ClearX = 1'b0;
-                    LoadX = 1'b0;
                     ShiftX = 1'b1;
                     Adder_en_X = 1'b0;
                 end
