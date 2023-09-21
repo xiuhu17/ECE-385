@@ -1,3 +1,6 @@
+
+// whole idea is: update curr_state use previous state's next_state
+// use curr_state to get next_state and output signal
 module control (input logic Clk,
                 input logic Run,
                 input logic ClearA_LoadB,
