@@ -13,11 +13,8 @@ logic [7:0] SW;
 logic [7:0] Aval, Bval;
 logic Xval;
 
-logic [7:0] hex_segA, hex_setB;
-logic [3:0] hex_gridA, hex_graidB;
-
-// To store expected results
-logic [7:0] ans_1a, ans_2b;
+logic [7:0] hex_segA, hex_segB;
+logic [3:0] hex_gridA, hex_gridB;
 				
 // A counter to count the instances where simulation results
 // do no match with expected results
@@ -63,7 +60,7 @@ ClearA_LoadB = 1;
 
 #2 Run = 1;
 
-#20 Run = 0;
+#50 Run = 0;
     if (Aval != pos_left)
 	 ErrorCnt++;
     if (Bval != pos_right)
@@ -76,7 +73,7 @@ ClearA_LoadB = 1;
 #2 SW = FN_;
 
 #2 Run = 1;
-#20 Run = 0;
+#50 Run = 0;
     if (Aval != neg_left)
 	 ErrorCnt++;
     if (Bval != neg_right)
@@ -90,7 +87,7 @@ ClearA_LoadB = 1;
 #2 SW = FN;
 
 #2 Run = 1;
-#20 Run = 0;
+#50 Run = 0;
     if (Aval != neg_left)
 	 ErrorCnt++;
     if (Bval != neg_right)
@@ -104,7 +101,7 @@ ClearA_LoadB = 1;
 #2 SW = FN_;
 
 #2 Run = 1;
-#20 Run = 0;
+#50 Run = 0;
     if (Aval != pos_left)
 	 ErrorCnt++;
     if (Bval != pos_right)
@@ -116,4 +113,3 @@ else
 	$display("%d error(s) detected. Try again!", ErrorCnt);
 end
 endmodule
-

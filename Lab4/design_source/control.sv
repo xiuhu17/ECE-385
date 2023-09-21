@@ -1,4 +1,3 @@
-
 // whole idea is: update curr_state use previous state's next_state
 // use curr_state to get next_state and output signal
 module control (input logic Clk,
@@ -40,7 +39,7 @@ module control (input logic Clk,
         unique case (curr_state) 
 
 
-            A :    if (Run)
+            A :    if (Run)     // for situation when someone never his Run button, stuck into this state
                        next_state = prev_B;
             // eight states for eight shifts
             prev_B: next_state = B;
@@ -61,6 +60,7 @@ module control (input logic Clk,
             I :    next_state = I_;
             I_:     next_state = J;
             J :    if (~Run)                // according to the Q/A, we need one Run per cycle, only Run is low, we go back to A
+                                            // this is for dealing the situation when someone holding the Run button without releasing
                        next_state = A;
 
         endcase 
@@ -70,6 +70,8 @@ module control (input logic Clk,
         case (curr_state)                   // get the signal output, base on updated curr_state, third part
             A:  // clear A, Load B, clear X
                 // if not run, then stay in this state forever 
+                // normally, the (output = input), here, we do not need to do this, since we only have one input load signal
+                // here we use reset to do everything
                 begin
                     ShiftA = 1'b0;
                     Adder_en_A = 1'b0;
