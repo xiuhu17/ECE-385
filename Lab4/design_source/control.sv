@@ -36,6 +36,7 @@ module control (input logic Clk,
     always_comb
     begin                           
         next_state = curr_state;    // default action
+        Sub_Add = 1'b0; 
         unique case (curr_state) 
 
 
