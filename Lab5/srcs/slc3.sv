@@ -54,14 +54,17 @@ HexDriver HexA (
 // You may use the second (right) HEX driver to display additional debug information
 // For example, Prof. Cheng's solution code has PC being displayed on the right HEX
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------just for 5.1 only------------------------------------------------------
 HexDriver HexB (
     .clk(Clk),
     .reset(Reset),
-    .in(),
+    .in({IR[15:12],  IR[11:8], IR[7:4], IR[3:0]}),
     .hex_seg(hex_segB),
     .hex_grid(hex_gridB)
 );
+//--------------------------------------------just for 5.1 only------------------------------------------------------
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Connect MAR to ADDR, which is also connected as an input into MEM2IO
 //	MEM2IO will determine what gets put onto Data_CPU (which serves as a potential

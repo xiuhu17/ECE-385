@@ -32,8 +32,8 @@ always_comb begin
 		WE = we_select;
 		OE = we_select;
 	end else begin
-		WE = we_from_ISDU;
-		OE = oe_from_ISDU;
+		WE = we_from_ISDU;  // after writing into the memory, give control back to CPU
+		OE = oe_from_ISDU;  // after writing into the memory, give control back to CPU
 	end
 end
 
@@ -41,7 +41,7 @@ always_comb begin
 	if(we_select)
 		Data_to_SRAM = init_data;
 	else
-		Data_to_SRAM = Data_from_CPU;
+		Data_to_SRAM = Data_from_CPU;  // after writing into the memory, give control back to CPU
 end
 
 always_comb begin

@@ -87,7 +87,7 @@ module Instantiateram( input Reset,
 				done:;
 			endcase
 		end
-		
+	// simply write instruction into the memory
 	always_comb begin
 		case(address)
 

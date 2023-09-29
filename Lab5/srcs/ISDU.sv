@@ -162,6 +162,8 @@ module ISDU (   input logic         Clk,
 					Mem_OE = 1'b0;
 					Mem_WE = 1'b0;
 				end
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			//--------------------------------------------just for 5.1 only------------------------------------------------------
 			S_33_1 : //You may have to think about this as well to adapt to RAM with wait-states
 				begin
 					Mem_OE = 1'b1;
@@ -174,9 +176,11 @@ module ISDU (   input logic         Clk,
 				end
 			S_33_3 : //You may have to think about this as well to adapt to RAM with wait-states
 				begin
-					Mem_OE = 1'b0;
+					Mem_OE = 1'b1;
 					LD_MDR = 1'b1;
 				end
+			//--------------------------------------------just for 5.1 only------------------------------------------------------
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			S_35 : 
 				begin 
 					GateMDR = 1'b1;
