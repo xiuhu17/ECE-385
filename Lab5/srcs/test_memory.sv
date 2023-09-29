@@ -95,7 +95,6 @@ module test_memory ( input Reset,
 				end
     end
     
-
 	 assign readout = mem_out;
     
 

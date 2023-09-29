@@ -1,0 +1,15 @@
+Notes for structure
+
+slc3_testtop.sv: for simulation
+    |
+    |------------ test_memory.sv
+                    |
+                    |-------------- memory_contents.sv: memory_contents for test_memory, that is, the memory layout in simulation stage
+
+slc3_sramtop.sv: for synthesis
+    |
+    |------------ instantiateram.sv: memory_contents for synthesis, implementaion and bitstream
+
+SLC3_2.sv: define function for generating IR value
+
+

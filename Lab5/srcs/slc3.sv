@@ -22,9 +22,9 @@
 module slc3(
 	input logic [15:0] SW,
 	input logic	Clk, Reset, Run, Continue,
+    input logic [15:0] Data_from_SRAM,
+    output logic OE, WE, // OE = 1: allow Data_Drom_sRam, allow Data_to_CPU
 	output logic [15:0] LED,
-	input logic [15:0] Data_from_SRAM,
-	output logic OE, WE,
 	output logic [7:0] hex_seg,
 	output logic [3:0] hex_grid,
 	output logic [7:0] hex_segB,
@@ -88,5 +88,15 @@ ISDU state_controller(
 	.Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
    .Mem_OE(OE), .Mem_WE(WE)
 );
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------just for 5.1 only------------------------------------------------------
+logic [15:0] Pc_Store;
+pc pc_(.Clk(Clk), .Reset(Reset), .Load_En(LD_PC), .Data_Out_Q(Pc_Store));
+mar mar_(.Clk(Clk), .Reset(Reset), .Load_En(LD_MAR), .Data_In_D(Pc_Store), .Data_Out_Q(MAR)); // ADDR is connected to MAR
+mdr mdr_(.Clk(Clk), .Reset(Reset), .Load_En(LD_MDR), .Data_In_D(MDR_In), .Data_Out_Q(MDR));
+ir ir_(.Clk(Clk), .Reset(Reset), .Load_En(LD_IR), .Data_In_D(MDR), .Data_Out_Q(IR));
+//--------------------------------------------just for 5.1 only------------------------------------------------------
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 endmodule

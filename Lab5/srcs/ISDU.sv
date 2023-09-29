@@ -59,6 +59,8 @@ module ISDU (   input logic         Clk,
 						PauseIR2, 
 						S_18, 
 						S_33_1,
+						S_33_2,
+						S_33_3,
 						S_35, 
 						S_32, 
 						S_01}   State, Next_state;   // Internal state logic
@@ -111,7 +113,11 @@ module ISDU (   input logic         Clk,
 			S_18 : 
 				Next_state = S_33_1; //Notice that we usually have 'R' here, but you will need to add extra states instead 
 			S_33_1 :                 //e.g. S_33_2, etc. How many? As a hint, note that the BRAM is synchronous, in addition, 
-				Next_state = S_35;   //it has an additional output register. 
+				Next_state = S_33_2;   //it has an additional output register. 
+			S_33_2 : 
+				Next_state = S_33_3;
+			S_33_3 :
+				Next_state = S_35;
 			S_35 : 
 				Next_state = S_32;
 			// PauseIR1 and PauseIR2 are only for Week 1 such that TAs can see 
@@ -159,6 +165,16 @@ module ISDU (   input logic         Clk,
 			S_33_1 : //You may have to think about this as well to adapt to RAM with wait-states
 				begin
 					Mem_OE = 1'b1;
+					LD_MDR = 1'b0;
+				end
+			S_33_2 : //You may have to think about this as well to adapt to RAM with wait-states
+				begin
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b0;
+				end
+			S_33_3 : //You may have to think about this as well to adapt to RAM with wait-states
+				begin
+					Mem_OE = 1'b0;
 					LD_MDR = 1'b1;
 				end
 			S_35 : 
