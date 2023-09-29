@@ -68,7 +68,7 @@ module pc (input  logic Clk, Reset, Load_En,
         end 			
 		else begin 
             if (Load_En) begin 
-                Data_Out_Q <= Data_Out_Q + 16'h1; // updated when gets to next clock cycle
+                Data_Out_Q <= (Data_Out_Q + 16'h1); // updated when gets to next clock cycle
             end
         end
     end

@@ -119,7 +119,7 @@ module ISDU (   input logic         Clk,
 			S_33_3 :
 				Next_state = S_35;
 			S_35 : 
-				Next_state = S_32;
+				Next_state = PauseIR1;
 			// PauseIR1 and PauseIR2 are only for Week 1 such that TAs can see 
 			// the values in IR.
 			PauseIR1 : 
@@ -180,7 +180,7 @@ module ISDU (   input logic         Clk,
 					LD_MDR = 1'b1;
 				end
 			//--------------------------------------------just for 5.1 only------------------------------------------------------
-			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////c////////////////////////////////////////////////////////////////////////////////////
 			S_35 : 
 				begin 
 					GateMDR = 1'b1;
