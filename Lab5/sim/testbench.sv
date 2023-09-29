@@ -51,6 +51,7 @@ Continue = 1;
 
 #20 Continue = 0;
 
+// for every 1/0 cycle, it back to s_18
 #20 Continue = 1;
 
 #20 Continue = 0;

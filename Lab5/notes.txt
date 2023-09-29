@@ -1,14 +1,16 @@
 Notes for structure
 
-slc3_testtop.sv: for simulation
+testbench.sv 
     |
-    |------------ test_memory.sv
-                    |
-                    |-------------- memory_contents.sv: memory_contents for test_memory, that is, the memory layout in simulation stage
+    |------------ slc3_testtop.sv: for simulation
+        |
+        |------------ test_memory.sv: use memory inside the memory_content, can read or write 
+                        |
+                        |-------------- memory_contents.sv: memory_contents for test_memory, that is, the memory layout in simulation stage
 
-slc3_sramtop.sv: for synthesis
+slc3_sramtop.sv: for synthesis, after writing into the memory, we give "address" control back to slc3 
     |
-    |------------ instantiateram.sv: memory_contents for synthesis, implementaion and bitstream
+    |------------ instantiateram.sv: memory_contents for real stuff. Need to write data into the memory.
 
 SLC3_2.sv: define function for generating IR value
 
