@@ -12,7 +12,6 @@ module WRAP (   // general part
                 // for GATEMARMUX
                 output logic[15:0] GATE_MAR_MUX_OUT,
                 // for input signal part
-                input logic GatePC, GateMDR, GateALU, GateMARMUX,
                 input logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED,
                 input logic SR2MUX, ADDR1MUX,
                 input logic MIO_EN, DRMUX, SR1MUX,

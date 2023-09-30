@@ -155,7 +155,7 @@ module ISDU (   input logic         Clk,
 				begin 
 					GatePC = 1'b1;
 					LD_MAR = 1'b1;
-					PCMUX = 1'b0;
+					PCMUX = 1'b1;
 					LD_PC = 1'b1;
 					Mem_OE = 1'b0;
 					Mem_WE = 1'b0;
