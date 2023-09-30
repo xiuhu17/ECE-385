@@ -42,7 +42,7 @@ module ISDU (   input logic         Clk,
 									GateALU,
 									GateMARMUX,
 									
-				output logic [1:0]  PCMUX,
+				output logic 		PCMUX,
 				output logic        DRMUX,
 									SR1MUX,
 									SR2MUX,
@@ -95,7 +95,7 @@ module ISDU (   input logic         Clk,
 		 
 		ALUK = 2'b00;
 		 
-		PCMUX = 2'b00;
+		PCMUX = 1'b0;
 		DRMUX = 1'b0;
 		SR1MUX = 1'b0;
 		SR2MUX = 1'b0;
@@ -155,7 +155,7 @@ module ISDU (   input logic         Clk,
 				begin 
 					GatePC = 1'b1;
 					LD_MAR = 1'b1;
-					PCMUX = 2'b00;
+					PCMUX = 1'b0;
 					LD_PC = 1'b1;
 					Mem_OE = 1'b0;
 					Mem_WE = 1'b0;
@@ -188,7 +188,7 @@ module ISDU (   input logic         Clk,
 				   // during the corresponding state, all relevant signals are rased, all relecant paths are populated with the two paramenters
 				begin 
 					SR2MUX = IR_5;
-					ALUK = 2'b00;
+					ALUK = 2'b00; 
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
 					// incomplete...

@@ -38,9 +38,8 @@ module slc3(
 logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED;
 logic GatePC, GateMDR, GateALU, GateMARMUX;
 logic SR2MUX, ADDR1MUX, MARMUX;
-logic BEN, MIO_EN, DRMUX, SR1MUX;
-logic [1:0] PCMUX, ADDR2MUX, ALUK;
-// logic PCMUX;
+logic BEN, MIO_EN, DRMUX, SR1MUX, PCMUX;
+logic [1:0] ADDR2MUX, ALUK;
 logic [15:0] MDR_In;
 logic [15:0] MAR, MDR, IR;
 logic [3:0] hex_4[3:0]; 
@@ -81,11 +80,29 @@ ISDU state_controller(
 	.Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
    .Mem_OE(OE), .Mem_WE(WE)
 );
-	
+
+// bus
+logic [15:0] BUS_OUT;
+MUX_BUS mux_muxbus(.GatePC(GatePC), .GateMDR(GateMDR), .GateALU(GateALU), .GateMARMUX(GateMARMUX), 
+					.GatePC_IN(GATE_PC_OUT), .GateMDR_IN(Gate_MDR_OUT), .GateALU_IN(GATE_ALU_OUT), .GateMARMUX_IN(GATE_MAR_MUX_OUT),
+					.BUS_OUT(BUS_OUT));
+
+// wrap
+logic [15:0] Gate_MDR_OUT, GATE_ALU_OUT, GATE_PC_OUT, GATE_MAR_MUX_OUT;
+WRAP wrap_(		.Clk(Clk), .Reset(Reset), .BUS_IN(BUS_OUT), .Data_to_CPU_IN(MDR_In), 
+				.Gate_MDR_OUT(Gate_MDR_OUT), .Data_From_CPU_OUT(MDR), 
+				.MAR_OUT_Q(MAR),
+				.GATE_ALU_OUT(GATE_ALU_OUT), 
+				.GATE_PC_OUT(GATE_PC_OUT), 
+				.GATE_MAR_MUX_OUT(GATE_MAR_MUX_OUT), 
+				.LD_MAR(LD_MAR), .LD_MDR(LD_MDR), .LD_IR(LD_IR), .LD_BEN(LD_BEN), .LD_CC(LD_CC), .LD_REG(LD_REG), .LD_PC(LD_PC), .LD_LED(LD_LED),
+				.SR2MUX(SR2MUX), .ADDR1MUX(ADDR1MUX), 
+				.MIO_EN(MIO_EN), .DRMUX(DRMUX), .SR1MUX(SR1MUX), 
+				.PCMUX(PCMUX), 
+				.ADDR2MUX(ADDR2MUX), .ALUK(ALUK),
+				.BEN_OUT_Q(BEN), 
+				.IR_OUT_Q(IR), 
+				.LED_OUT_Q(LED)
+                );
+
 endmodule
-
-
-logic [15:0] your_input_A, your_input_B;//any 16 bit register
-logic [7:0] hex_segA, hex_segB;
-logic [3:0] hex_gridA, hex_gridB;
-

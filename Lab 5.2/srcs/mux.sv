@@ -1,3 +1,5 @@
+// all mux, 0, 1
+// all mux, 00, 01, 10, 11
 // two 16 bit input
 module  MUX_2_16 (  input   logic   Select,
 				    input	logic	[15:0] Z_IN,
@@ -54,13 +56,13 @@ module  MUX_2_3 (   input    logic   Select,
 endmodule		
 
 // four 16 bit input
-module MUX_4_16 (   input logic GatePC, GateMDR, GateALU, GateMARMUX,
+module MUX_BUS (   input logic GatePC, GateMDR, GateALU, GateMARMUX,
                     input logic [16:0] GatePC_IN, GateMDR_IN, GateALU_IN, GateMARMUX_IN,
                     output logic [16:0] BUS_OUT);
 
         always_comb
 		begin   
-                BUS_OUT = 16'h0; // avoid inferred latch
+                BUS_OUT = 16'bzzzzzzzzzzzzzzzz; // avoid inferred latch
                 if (GatePC) begin
                     BUS_OUT = GatePC_IN;
                 end else if (GateMDR) begin
