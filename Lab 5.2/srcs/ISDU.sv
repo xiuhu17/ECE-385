@@ -18,6 +18,7 @@
 //------------------------------------------------------------------------------
 
 // only for read/write with SRAM, we need to stay at the states for several clock cycles.
+// OE WE both 1 for writing into RAM
 module ISDU (   input logic         Clk, 
 									Reset,
 									Run,
