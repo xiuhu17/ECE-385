@@ -15,7 +15,7 @@ module WRAP (   // general part
                 input logic LD_MAR, LD_MDR, LD_IR, LD_BEN, LD_CC, LD_REG, LD_PC, LD_LED,
                 input logic SR2MUX, ADDR1MUX,
                 input logic MIO_EN, DRMUX, SR1MUX,
-                input logic PCMUX, 
+                input logic [1:0] PCMUX, 
                 input logic [1:0] ADDR2MUX, ALUK, 
                 // for output signal part
                 output logic BEN_OUT_Q,
@@ -71,7 +71,7 @@ module WRAP (   // general part
             logic [15:0] PC_NORMAL_NEXT;
             logic [15:0] PC_IN_D;
             assign PC_NORMAL_NEXT = (PC_OUT_Q + 16'h1);
-            MUX_2_16 mux_pcmux(.Select(PCMUX), .Z_IN(ADDR_OUT), .O_IN(PC_NORMAL_NEXT), .OUT(PC_IN_D));
+            MUX_3_16 mux_pcmux(.Select(PCMUX), .ZZ_IN(BUS_IN), .ZO_IN(ADDR_OUT), .OZ_IN(PC_NORMAL_NEXT), .OUT(PC_IN_D));
             reg_16 reg_16_pc(.Clk(Clk), .Reset(Reset), .Load_En(LD_PC), .Data_In_D(PC_IN_D), .Data_Out_Q(PC_OUT_Q));
             assign GATE_PC_OUT = PC_OUT_Q;
 

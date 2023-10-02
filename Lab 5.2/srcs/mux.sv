@@ -55,6 +55,25 @@ module  MUX_2_3 (   input    logic   Select,
 
 endmodule		
 
+// two 3 bit input
+module  MUX_3_16 (   input   logic   [1:0] Select,
+				    input	logic	[15:0] ZZ_IN,
+				    input 	logic	[15:0] ZO_IN,
+					input 	logic	[15:0] OZ_IN,
+					output  logic   [15:0] OUT);
+						
+		always_comb
+		begin   
+                OUT = 16'h0; // avoid inferred latch
+				case(Select)
+						2'b00	:	OUT = ZZ_IN;
+						2'b01	:	OUT = ZO_IN;
+						2'b10	:   OUT = OZ_IN;
+				endcase
+		end
+
+endmodule	
+
 // four 16 bit input
 module MUX_BUS (   input logic GatePC, GateMDR, GateALU, GateMARMUX,
                     input logic [16:0] GatePC_IN, GateMDR_IN, GateALU_IN, GateMARMUX_IN,
