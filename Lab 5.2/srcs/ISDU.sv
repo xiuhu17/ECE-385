@@ -18,7 +18,8 @@
 //------------------------------------------------------------------------------
 
 // only for read/write with SRAM, we need to stay at the states for several clock cycles.
-// OE WE both 1 for writing into RAM
+// OE = 1 WE = 1 for writing into RAM(MAR->ADDR MDR->Data_from_CPU->Data_to_Sram) or Hex(MAR->FFFF MDR->Data_from_CPU->Hex)
+// OE = 1 for reading from RAM(MAR->ADDR Data_from_Sram->Data_to_CPU->MDR) or SW(MAR->FFFF SW->Data_to_CPU->MDR)
 module ISDU (   input logic         Clk, 
 									Reset,
 									Run,
