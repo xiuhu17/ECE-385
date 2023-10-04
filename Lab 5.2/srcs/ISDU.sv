@@ -65,7 +65,25 @@ module ISDU (   input logic         Clk,
 						S_33_3,
 						S_35, 
 						S_32, 
-						S_01}   State, Next_state;   // Internal state logic
+						S_01,
+						S_05,
+						S_09,
+						S_06,
+						S_25_1,
+						S_25_2,
+						S_25_3,
+						S_27,
+						S_07,
+						S_23,
+						S_16_1,
+						S_16_2,
+						S_16_3,
+						S_00,
+						S_22,
+						S_12,
+						S_04,
+						S_21
+						}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
 	begin
@@ -113,9 +131,9 @@ module ISDU (   input logic         Clk,
 				if (Run) 
 					Next_state = S_18;
 			S_18 : 
-				Next_state = S_33_1; //Notice that we usually have 'R' here, but you will need to add extra states instead 
-			S_33_1 :                 //e.g. S_33_2, etc. How many? As a hint, note that the BRAM is synchronous, in addition, 
-				Next_state = S_33_2;   //it has an additional output register. 
+				Next_state = S_33_1; 
+			S_33_1 :                 
+				Next_state = S_33_2;   
 			S_33_2 : 
 				Next_state = S_33_3;
 			S_33_3 :
@@ -136,18 +154,67 @@ module ISDU (   input logic         Clk,
 				case (Opcode)
 					4'b0001 : 
 						Next_state = S_01;
-					
-					// You need to finish the rest of opcodes.....
-
+					4'b0101 :
+						Next_state = S_05;
+					4'b1001 :
+						Next_state = S_09;
+					4'b0110 :
+						Next_state = S_06;
+					4'b0111 :
+						Next_state = S_07;
+					4'b1101 :
+						Next_state = PauseIR1;
+					4'b0000 : 
+						Next_state = S_00;
+					4'b1100 :
+						Next_state = S_12;
+					4'b0100 :
+						Next_state = S_4;
 					default : 
 						Next_state = S_18;
 				endcase
 			S_01 : 
 				Next_state = S_18;
-			// You need to finish the rest of states.....
-			
+			S_05 : 
+				Next_state = S_18;
+			S_09 :
+				Next_state = S_18;
+			S_06 :
+				Next_state = S_25_1;
+			S_25_1 :
+				Next_state = S_25_2;
+			S_25_2 :
+				Next_state = S_25_3;
+			S_25_3 :
+				Next_state = S_27;
+			S_27 :
+				Next_state = S_18;
+			S_07 :
+				Next_state = S_23;
+			S_23 :
+				Next_state = S_16_1;
+			S_16_1 :
+				Next_state = S_16_2;
+			S_16_2 :
+				Next_state = S_16_3;
+			S_16_3 :
+				Next_state = S_18;
+			S_00 :
+				case (BEN)
+					1'b0 :
+						Next_state = S_18;
+					1'b1 :
+						Next_state = S_22;
+				endcase
+			S_22 :
+				Next_state = S_18;
+			S_12 :
+				Next_state = S_18;
+			S_04 :
+				Next_state = S_21;
+			S_21 :
+				Next_state = S_18;
 			default :;
-
 		endcase
 		
 		// Assign control signals based on current state
@@ -189,15 +256,133 @@ module ISDU (   input logic         Clk,
 			S_01 : // datapath between the output of the Regfile and the input of the Regfile have no clocked components in between.
 				   // during the corresponding state, all relevant signals are rased, all relecant paths are populated with the two paramenters
 				begin 
-					SR2MUX = IR_5;
-					ALUK = 2'b00; 
+					SR1MUX = 1'b1;
+					if (IR_5 == 1'b0) begin // IR5 = 0 --> ADD --> SR2MUX = 1
+						SR2MUX = 1'b1;
+					end else begin   // IR5 = 1 --> ADDi  --> SR2MUX = 0
+						SR2MUX = 1'b0;
+					end
+					ALUK = 2'b00; // add
 					GateALU = 1'b1;
+					DRMUX = 1'b1;
 					LD_REG = 1'b1;
-					// incomplete...
+					LD_CC = 1'b1;
 				end
-
-			// You need to finish the rest of states..... 
-
+			S_05 :	
+				begin
+					SR1MUX = 1'b1;
+					if (IR_5 == 1'b0) begin // IR5 = 0 --> ADD --> SR2MUX = 1
+						SR2MUX = 1'b1;
+					end else begin   // IR5 = 1 --> ADDi  --> SR2MUX = 0
+						SR2MUX = 1'b0;
+					end
+					ALUK = 2'b01; // and
+					GateALU = 1'b1;
+					DRMUX = 1'b1;
+					LD_REG = 1'b1;
+					LD_CC = 1'b1;
+				end
+			S_09 :
+				begin
+					SR1MUX = 1'b1;
+					SR2MUX = 1'b0;	// not
+					ALUK = 2'b10; 	// not
+					GateALU = 1'b1;
+					DRMUX = 1'b1;
+					LD_REG = 1'b1;
+					LD_CC = 1'b1;	
+				end
+			S_06 :
+				begin
+					SR1MUX = 1'b1; // BaseR
+					ADDR1MUX = 1'b0;
+					ADDR2MUX = 2'b10;
+					GateMARMUX = 1'b1;
+					LD_MAR = 1'b1;
+				end
+			S_25_1 :
+				begin 
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b0;
+				end
+			S_25_2 :
+				begin  
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b0;
+				end
+			S_25_3 :
+				begin  
+					Mem_OE = 1'b1;
+					LD_MDR = 1'b1;
+				end
+			S_27 :
+				begin  
+					GateMDR = 1'b1;
+					LD_REG = 1'b1;
+					DRMUX = 1'b1;
+					LD_CC = 1'b1;
+				end
+			S_07 :
+				begin 
+					SR1MUX = 1'b1; // baser
+					ADDR1MUX = 1'b0;
+					ADDR2MUX = 2'b10;
+					GateMARMUX = 1'b1;
+					LD_MAR = 1'b1;
+				end
+			S_23 :
+				begin  
+					SR1MUX = 1'b0; // sr
+					ADDR1MUX = 1'b0;
+					ADDR2MUX = 2'b11;
+					GateMARMUX = 1'b1;
+					Mem_OE = 1'b0; // MIO_EN = 1'b0
+					LD_MDR = 1'b1;
+				end
+			S_16_1 :
+				begin 
+					Mem_OE = 1'b1;
+					Mem_WE = 1'b1;
+				end
+			S_16_2 :
+				begin 
+					Mem_OE = 1'b1;
+					Mem_WE = 1'b1;
+				end
+			S_16_3 :
+				begin 
+					Mem_OE = 1'b1;
+					Mem_WE = 1'b1;
+				end
+			S_00 : ; // do nonthing
+			S_22 :
+				begin 
+					ADDR1MUX = 1'b1; 
+					ADDR2MUX = 2'b01; 
+					PCMUX = 2'b01;
+					LD_PC = 1'b1;
+				end 
+			S_12 :
+				begin 
+					SR1MUX = 1'b1; // baser
+					ADDR1MUX = 1'b0;
+					ADDR2MUX = 2'b11;
+					PCMUX = 2'b01;
+					LD_PC = 1'b1;
+				end
+			S_04 : 
+			 	begin 
+					GatePC = 1'b1;
+					DRMUX = 1'b0;
+					LD_REG = 1'b1;
+				end 
+			S_21 :
+				begin 
+					ADDR1MUX = 1'b1;
+					ADDR2MUX = 2'b00;
+					PCMUX = 2'b01;
+					LD_PC = 1'b1;
+				end 
 			default : ;
 		endcase
 	end 

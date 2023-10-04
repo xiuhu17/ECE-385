@@ -38,9 +38,9 @@ module WRAP (   // general part
             // for ir 
             reg_16 reg_16_ir(.Clk(Clk), .Reset(Reset), .Load_En(LD_IR), .Data_In_D(BUS_IN), .Data_Out_Q(IR_OUT_Q));
 
-            // for led, a cycle behind ir 
+            // for led, a cycle behind ir, when pause, show the IR instruction
             logic [15:0] LED_IN_D;
-            assign LED_IN_D = { { 4{ IR_OUT_Q[11] } }, IR_OUT_Q[11:0] };
+            assign LED_IN_D = IR_OUT_Q;
             reg_16 reg_16_led(.Clk(Clk), .Reset(Reset), .Load_En(LD_LED), .Data_In_D(LED_IN_D), .Data_Out_Q(LED_OUT_Q));
 
             // for branch, only LDR, ADD, ADDI, AND, ANDI will change -> LD_CC
