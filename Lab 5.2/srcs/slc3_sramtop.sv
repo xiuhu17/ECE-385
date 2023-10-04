@@ -13,7 +13,7 @@ module slc3_sramtop(
 // Input button synchronizer to cross clock domain
 logic RUN_S, CONTINUE_S;
 
-sync button_sync[2:0] (Clk, {Run, Continue}, {RUN_S, CONTINUE_S});
+sync button_sync[1:0] (Clk, {Run, Continue}, {RUN_S, CONTINUE_S});
 
 // Declaration of push button active high signals	
 logic Reset_ah, Continue_ah, Run_ah;
@@ -25,7 +25,7 @@ logic oe_from_ISDU;
 
 assign Run_ah = RUN_S;
 assign Continue_ah = CONTINUE_S;
-assign Reset_ah =  Reset_S;
+assign Reset_ah =  Reset;
 
 always_comb begin
 	if(we_select) begin
