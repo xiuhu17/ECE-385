@@ -1,5 +1,11 @@
 //SLC-3 Top level module for synthesis using physical RAM
 //All synchronizers go here (both inputs and outputs)
+// comments for the display:
+//							[display the data from CPU] [STORE_NEXT_POSSIPLE_PC]
+//                                                      (STORE_NEXT_POSSIPLE_PC = PC + 1; STORE_NEXT_POSSIPLE_PC may be overwritten by PC + off for other jmp instruction; 
+//														 Especially for PSE instruction, STORE_NEXT_POSSIPLE_PC will not be overwritten, therefore STORE_NEXT_POSSIPLE_PC = PC + 1 is the next instruction we are going to executed; We are executing decoded PC)
+// 						    [decoded PC value, PC is the address of the current instruction]
+//														(Especially for PSE instruction, it is the PSE instruction itself)
 module slc3_sramtop(
 	input logic [15:0] SW,
 	input logic	Clk, Reset,Run, Continue,

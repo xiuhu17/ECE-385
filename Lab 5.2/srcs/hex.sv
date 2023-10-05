@@ -1,68 +1,14 @@
-module HexDrivertop (
+module HexDriver (
     input   logic           clk,
     input   logic           reset,
 
-    input   logic   [15:0]   in,
+    input   logic   [3:0]   in[4],
 
     output  logic   [7:0]   hex_seg,
     output  logic   [3:0]   hex_grid
 );
-
     
-    
-
-    logic [7:0] hex1;
-    logic [7:0] hex2;
-    logic [7:0] hex3;
-    logic [7:0] hex4;
-    nibble_to_hex gen1(.nibble(in[15:12]), .hex(hex1));
-
-    nibble_to_hex gen2(.nibble(in[11:8]), .hex(hex2));
-
-    nibble_to_hex gen3(.nibble(in[7:4]), .hex(hex3));
-
-    nibble_to_hex gen4(.nibble(in[3:0]), .hex(hex4));
-
-    logic [16:0] counter;
-
-    always_ff @( posedge clk ) begin
-        if (reset) begin
-            counter <= '0;
-        end else begin
-            counter <= counter + 1;
-        end
-    end
-
-    always_comb begin
-        if (reset) begin
-            hex_grid = '1;
-            hex_seg = '1;
-        end else begin
-            case (counter [16:15])
-            2'b00: begin
-                hex_seg = ~hex1;
-                hex_grid = 4'b1110;
-            end
-            2'b01: begin
-                hex_seg = ~hex2;
-                hex_grid = 4'b1101;
-            end
-            2'b10: begin
-                hex_seg = ~hex3;
-                hex_grid = 4'b1011;
-            end
-            2'b11: begin
-                hex_seg = ~hex4;
-                hex_grid = 4'b0111;
-            end
-            endcase
-        end
-    end
-
-endmodule
-
-
-module nibble_to_hex(
+    module nibble_to_hex(
         input   logic   [3:0]   nibble,
         output  logic   [7:0]   hex
     );
@@ -87,3 +33,53 @@ module nibble_to_hex(
         endcase
         end
     endmodule
+
+    logic [7:0] hex [4];
+
+    genvar i;
+    generate
+        for(i = 0; i < 4; i++) begin
+            nibble_to_hex nibble_to_hex_(
+                .nibble(in[i]),
+                .hex(hex[i])
+            );
+        end
+    endgenerate
+
+    logic [16:0] counter;
+
+    always_ff @( posedge clk ) begin
+        if (reset) begin
+            counter <= '0;
+        end else begin
+            counter <= counter + 1;
+        end
+    end
+
+    always_comb begin
+        if (reset) begin
+            hex_grid = '1;
+            hex_seg = '1;
+        end else begin
+            case (counter [16:15])
+            2'b00: begin
+                hex_seg = ~hex[0];
+                hex_grid = 4'b1110;
+            end
+            2'b01: begin
+                hex_seg = ~hex[1];
+                hex_grid = 4'b1101;
+            end
+            2'b10: begin
+                hex_seg = ~hex[2];
+                hex_grid = 4'b1011;
+            end
+            2'b11: begin
+                hex_seg = ~hex[3];
+                hex_grid = 4'b0111;
+            end
+            endcase
+        end
+    end
+
+endmodule

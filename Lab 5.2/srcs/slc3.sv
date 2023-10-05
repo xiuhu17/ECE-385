@@ -44,14 +44,14 @@ logic [15:0] MDR_In;
 logic [15:0] MAR, MDR, IR, PC_OUT_Q;
 logic [3:0] hex_4[3:0]; 
 
-HexDrivertop HexA(  .clk(Clk), .reset(Reset), 
+HexDriver HexA(  .clk(Clk), .reset(Reset), 
                     .in({hex_4[3][3:0], hex_4[2][3:0], hex_4[1][3:0], hex_4[0][3:0]}),  
                     .hex_seg(hex_seg),  .hex_grid(hex_grid));
 
 
 // You may use the second (right) HEX driver to display additional debug information
 // For example, Prof. Cheng's solution code has PC being displayed on the right HEX
-HexDrivertop HexB(  .clk(Clk), .reset(Reset), 
+HexDriver HexB(  .clk(Clk), .reset(Reset), 
                     .in({PC_OUT_Q[15:12], PC_OUT_Q[11:8], PC_OUT_Q[7:4], PC_OUT_Q[3:0]}),  
                     .hex_seg(hex_segB), .hex_grid(hex_gridB));
 
