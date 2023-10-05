@@ -85,6 +85,6 @@ module WRAP (   // general part
             // for sr2mux, alu
             logic [15:0] SR2MUX_OUT;
             MUX_2_16 mux_sr2mux(.Select(SR2MUX), .Z_IN(SEXT_5), .O_IN(SR2_OUT_Q), .OUT(SR2MUX_OUT));
-            Calc_ALU calc_alu_(.A(SR1_OUT_Q), .B(SR2MUX_OUT), .ALUK(ALUK), .OUT(GATE_ALU_OUT));
+            Calc_ALU calc_alu_(.A(SR1_OUT_Q), .B(SR2MUX_OUT), .ALUK(ALUK), .ALU_OUT(GATE_ALU_OUT));
 
 endmodule

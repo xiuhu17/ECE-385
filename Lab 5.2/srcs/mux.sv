@@ -29,10 +29,10 @@ module  MUX_4_16 (  input   logic   [1:0] Select,
 		begin   
                 OUT = 16'h0; // avoid inferred latch
 				case(Select)
-						1'b00	:	OUT = ZZ_IN;
-						1'b01	:	OUT = ZO_IN;
-                        1'b10	:	OUT = OZ_IN;
-						1'b11	:	OUT = OO_IN;
+						2'b00	:	OUT = ZZ_IN;
+						2'b01	:	OUT = ZO_IN;
+                        2'b10	:	OUT = OZ_IN;
+						2'b11	:	OUT = OO_IN;
 				endcase
 		end
 		

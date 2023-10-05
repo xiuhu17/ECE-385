@@ -56,7 +56,7 @@ module ISDU (   input logic         Clk,
 									Mem_WE
 				);
 
-	enum logic [4:0] {  Halted, 
+	enum logic [5:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
 						S_18, 
@@ -169,7 +169,7 @@ module ISDU (   input logic         Clk,
 					4'b1100 :
 						Next_state = S_12;
 					4'b0100 :
-						Next_state = S_4;
+						Next_state = S_04;
 					default : 
 						Next_state = S_18;
 				endcase
@@ -389,15 +389,3 @@ module ISDU (   input logic         Clk,
 
 	
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
