@@ -49,7 +49,7 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
                                                           // Basic I/O test 3 (Self-modifying code)
    mem_array[  11 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input
    mem_array[  12 ] =    opJSR(0)                 ;       // Get PC address
-   mem_array[  13 ] =    opLDR(R2,R7,3)           ;       // Load pause instruction as data
+   mem_array[  13 ] =    opLDR(R2,R7,3)           ;       // Load pause instruction 
    mem_array[  14 ] =    opLDR(R1, R0, inSW)      ;       // Load switches
    mem_array[  15 ] =    opSTR(R1, R0, outHEX)    ;       // Output
    mem_array[  16 ] =    opPSE(12'hC02)           ;       // Checkpoint 2 - read output, prepare to input
