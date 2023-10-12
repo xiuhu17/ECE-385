@@ -36,11 +36,13 @@ int main()
 		sleep(1);
 		if (*clr) {
 			dum = 0; // clear
+			while (*clr); // debounce
 		} else if (*acc) {
 			if (((MOD - dum) <= (*accu))) {
 				printf("Overflow!\r\n");
 			}
 			dum = (dum + *accu) % MOD; // accu
+			while (*acc); // debounce
 		}
 		*led_gpio_data = dum;
 		printf("Led On!\r\n");
