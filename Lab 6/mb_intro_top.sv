@@ -11,14 +11,24 @@
 
 module mb_intro_top
    (input  logic clk,
+    input logic[15:0] sw,
     output logic [15:0] led,
     input  logic [3:0] btn,
+    output logic [7:0] d0_seg,
+	output logic [3:0] d0_an,
     output logic uart_rxd,
     input  logic uart_txd);
 
+HexDriver hexA( .clk(clk), .reset(btn[0]), 
+                    .in({led[15:12], led[11:8], led[7:4], led[3:0]}),  
+                    .hex_seg(d0_seg),  .hex_grid(d0_an));
+
   mb_block mb_block_i
        (.clk_100MHz(clk),
-        .gpio_rtl_0_tri_o(led[0]),
+        .gpio_rtl_0_tri_o(led[15:0]),
+        .gpio_rtl_1_tri_i(sw[15:0]),
+        .gpio_rtl_2_tri_i(btn[1]),
+        .gpio_rtl_3_tri_i(btn[2]),
         .reset_rtl_0(~btn[0]),      //Note the inversion of the reset button. Buttons are active low, but the MicroBlaze reset is active high
         .uart_rtl_0_rxd(uart_txd),  //Note the switcheroo between RTX and TXD. This is a common source of confusion in embedded development
         .uart_rtl_0_txd(uart_rxd)); //RXD = Received Data, and TXD = Transmitted Data, but whether data is transmitted or received depeneds on the
