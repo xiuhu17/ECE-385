@@ -462,3 +462,172 @@ con
 ----------------End of Script----------------
 
 23:04:13 INFO  : Disconnected from the channel tcfchan#5.
+23:12:54 DEBUG : Logs will be stored at '/home/zhihaow6/Desktop/Vitis/Lab6.1/IDE.log'.
+23:12:54 INFO  : Launching XSCT server: xsct -n  -interactive /home/zhihaow6/Desktop/Vitis/Lab6.1/temp_xsdb_launch_script.tcl
+23:12:55 INFO  : Platform repository initialization has completed.
+23:12:56 INFO  : Registering command handlers for Vitis TCF services
+23:12:56 INFO  : XSCT server has started successfully.
+23:12:56 INFO  : plnx-install-location is set to ''
+23:12:56 INFO  : Successfully done setting XSCT server connection channel  
+23:12:56 INFO  : Successfully done query RDI_DATADIR 
+23:12:56 INFO  : Successfully done setting workspace for the tool. 
+23:15:49 INFO  : Result from executing command 'removePlatformRepo': 
+23:15:54 INFO  : Result from executing command 'getProjects': mb_intro_top
+23:15:54 INFO  : Result from executing command 'getPlatforms': 
+23:15:57 INFO  : Checking for BSP changes to sync application flags for project 'mb_blink'...
+23:16:04 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+23:16:04 INFO  : Jtag cable 'RealDigital Boo 8874292301D5A' is selected.
+23:16:04 INFO  : 'jtag frequency' command is executed.
+23:16:04 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+23:16:05 INFO  : Device configured successfully with "/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit"
+23:16:05 INFO  : Context for processor 'microblaze_0' is selected.
+23:16:05 INFO  : Hardware design and registers information is loaded from '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+23:16:05 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+23:16:05 INFO  : Context for processor 'microblaze_0' is selected.
+23:16:05 INFO  : System reset is completed.
+23:16:08 INFO  : 'after 3000' command is executed.
+23:16:08 INFO  : Context for processor 'microblaze_0' is selected.
+23:16:08 INFO  : The application '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf' is downloaded to processor 'microblaze_0'.
+23:16:08 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf
+----------------End of Script----------------
+
+23:16:08 INFO  : Context for processor 'microblaze_0' is selected.
+23:16:08 INFO  : 'con' command is executed.
+23:16:08 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+23:16:08 INFO  : Disconnected from the channel tcfchan#3.
+23:18:23 INFO  : Result from executing command 'removePlatformRepo': 
+23:18:30 INFO  : Result from executing command 'getProjects': mb_intro_top
+23:18:30 INFO  : Result from executing command 'getPlatforms': 
+23:18:33 INFO  : Checking for BSP changes to sync application flags for project 'mb_blink'...
+23:18:38 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+23:18:38 INFO  : Jtag cable 'RealDigital Boo 8874292301D5A' is selected.
+23:18:38 INFO  : 'jtag frequency' command is executed.
+23:18:38 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+23:18:39 INFO  : Device configured successfully with "/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit"
+23:18:40 INFO  : Context for processor 'microblaze_0' is selected.
+23:18:40 INFO  : Hardware design and registers information is loaded from '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+23:18:40 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+23:18:40 INFO  : Context for processor 'microblaze_0' is selected.
+23:18:40 INFO  : System reset is completed.
+23:18:43 INFO  : 'after 3000' command is executed.
+23:18:43 INFO  : Context for processor 'microblaze_0' is selected.
+23:18:43 INFO  : The application '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf' is downloaded to processor 'microblaze_0'.
+23:18:43 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf
+----------------End of Script----------------
+
+23:18:43 INFO  : Context for processor 'microblaze_0' is selected.
+23:18:43 INFO  : 'con' command is executed.
+23:18:43 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+23:18:43 INFO  : Disconnected from the channel tcfchan#6.
+23:20:53 INFO  : Result from executing command 'removePlatformRepo': 
+23:21:05 INFO  : Result from executing command 'getProjects': mb_intro_top
+23:21:05 INFO  : Result from executing command 'getPlatforms': 
+23:21:08 INFO  : Checking for BSP changes to sync application flags for project 'mb_blink'...
+23:24:50 INFO  : Result from executing command 'removePlatformRepo': 
+23:24:56 INFO  : Result from executing command 'getProjects': mb_intro_top
+23:24:56 INFO  : Result from executing command 'getPlatforms': 
+23:24:59 INFO  : Checking for BSP changes to sync application flags for project 'mb_blink'...
+23:25:09 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+23:25:09 INFO  : Jtag cable 'RealDigital Boo 8874292301D5A' is selected.
+23:25:09 INFO  : 'jtag frequency' command is executed.
+23:25:09 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+23:25:11 INFO  : Device configured successfully with "/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit"
+23:25:11 INFO  : Context for processor 'microblaze_0' is selected.
+23:25:11 INFO  : Hardware design and registers information is loaded from '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+23:25:11 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+23:25:11 INFO  : Context for processor 'microblaze_0' is selected.
+23:25:11 INFO  : System reset is completed.
+23:25:14 INFO  : 'after 3000' command is executed.
+23:25:14 INFO  : Context for processor 'microblaze_0' is selected.
+23:25:14 INFO  : The application '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf' is downloaded to processor 'microblaze_0'.
+23:25:14 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf
+----------------End of Script----------------
+
+23:25:14 INFO  : Context for processor 'microblaze_0' is selected.
+23:25:14 INFO  : 'con' command is executed.
+23:25:14 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+23:25:14 INFO  : Disconnected from the channel tcfchan#11.
+23:27:52 INFO  : Result from executing command 'removePlatformRepo': 
+23:28:00 INFO  : Result from executing command 'getProjects': mb_intro_top
+23:28:00 INFO  : Result from executing command 'getPlatforms': 
+23:28:04 INFO  : Checking for BSP changes to sync application flags for project 'mb_blink'...
+23:28:11 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+23:28:11 INFO  : Jtag cable 'RealDigital Boo 8874292301D5A' is selected.
+23:28:11 INFO  : 'jtag frequency' command is executed.
+23:28:11 INFO  : 'targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}' command is executed.
+23:28:12 INFO  : Device configured successfully with "/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit"
+23:28:12 INFO  : Context for processor 'microblaze_0' is selected.
+23:28:12 INFO  : Hardware design and registers information is loaded from '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa'.
+23:28:12 INFO  : 'configparams mdm-detect-bscan-mask 2' command is executed.
+23:28:12 INFO  : Context for processor 'microblaze_0' is selected.
+23:28:12 INFO  : System reset is completed.
+23:28:15 INFO  : 'after 3000' command is executed.
+23:28:15 INFO  : Context for processor 'microblaze_0' is selected.
+23:28:15 INFO  : The application '/home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf' is downloaded to processor 'microblaze_0'.
+23:28:15 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+targets -set -filter {jtag_cable_name =~ "RealDigital Boo 8874292301D5A" && level==0 && jtag_device_ctx=="jsn1-0362f093-0"}
+fpga -file /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/_ide/bitstream/mb_intro_top.bit
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+loadhw -hw /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_intro_top/export/mb_intro_top/hw/mb_intro_top.xsa -regs
+configparams mdm-detect-bscan-mask 2
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+rst -system
+after 3000
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+dow /home/zhihaow6/Desktop/Vitis/Lab6.1/mb_blink/Debug/mb_blink.elf
+----------------End of Script----------------
+
+23:28:15 INFO  : Context for processor 'microblaze_0' is selected.
+23:28:15 INFO  : 'con' command is executed.
+23:28:15 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "*microblaze*#0" && bscan=="USER2" }
+con
+----------------End of Script----------------
+
+23:28:15 INFO  : Disconnected from the channel tcfchan#14.

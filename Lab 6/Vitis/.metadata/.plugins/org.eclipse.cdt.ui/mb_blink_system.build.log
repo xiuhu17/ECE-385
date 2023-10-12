@@ -1,6 +1,6 @@
-23:03:48 **** Build of configuration Debug for project mb_blink_system ****
+23:28:04 **** Build of configuration Debug for project mb_blink_system ****
 make all 
 Skipping SD card image generation. Reason: The system project only has applications for microblaze processors.
 
-23:03:48 Build Finished (took 117ms)
+23:28:04 Build Finished (took 116ms)
 

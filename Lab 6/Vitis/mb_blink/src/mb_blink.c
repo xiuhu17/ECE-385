@@ -37,6 +37,9 @@ int main()
 		if (*clr) {
 			dum = 0; // clear
 		} else if (*acc) {
+			if (((MOD - dum) <= (*accu))) {
+				printf("Overflow!\r\n");
+			}
 			dum = (dum + *accu) % MOD; // accu
 		}
 		*led_gpio_data = dum;

@@ -15,22 +15,37 @@
 
 #include "platform.h"
 
-volatile uint32_t* led_gpio_data = <find the base address>;  //Hint: either find the manual address (via the memory map in the block diagram, or
+#define MOD 65536
+
+volatile uint32_t* led_gpio_data = XPAR_AXI_GPIO_0_BASEADDR;  //Hint: either find the manual address (via the memory map in the block diagram, or
 															 //replace with the proper define in xparameters (part of the BSP). Either way
 															 //this is the base address of the GPIO corresponding to your LEDs
 															 //(similar to 0xFFFF from MEM2IO from previous labs).
+volatile uint32_t* accu =  XPAR_AXI_GPIO_1_BASEADDR;
+
+volatile uint32_t* clr =  XPAR_AXI_GPIO_2_BASEADDR;
+
+volatile uint32_t* acc = XPAR_AXI_GPIO_3_BASEADDR;
 
 int main()
 {
     init_platform();
-
+    int dum = 0;
 	while (1+1 != 3)
 	{
 		sleep(1);
-		*led_gpio_data |=  0x00000001;
+		if (*clr) {
+			dum = 0; // clear
+		} else if (*acc) {
+			if (((MOD - dum) <= (*accu))) {
+				printf("Overflow!\r\n");
+			}
+			dum = (dum + *accu) % MOD; // accu
+		}
+		*led_gpio_data = dum;
 		printf("Led On!\r\n");
 		sleep(1);
-		*led_gpio_data &= ~0x00000001; //blinks LED
+		*led_gpio_data = 0; //blinks LED
 		printf("Led Off!\r\n");
 	}
 

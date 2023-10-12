@@ -1,4 +1,4 @@
-23:03:47 **** Build of configuration Debug for project mb_blink ****
+23:28:04 **** Build of configuration Debug for project mb_blink ****
 make all 
 Building file: ../src/mb_blink.c
 Invoking: MicroBlaze gcc compiler
@@ -43,9 +43,9 @@ Finished building target: mb_blink.elf
 Invoking: MicroBlaze Print Size
 mb-size mb_blink.elf  |tee "mb_blink.elf.size"
    text	   data	    bss	    dec	    hex	filename
-  16556	   1376	   3172	  21104	   5270	mb_blink.elf
+  16628	   1376	   3172	  21176	   52b8	mb_blink.elf
 Finished building: mb_blink.elf.size
  
 
-23:03:47 Build Finished (took 268ms)
+23:28:04 Build Finished (took 268ms)
 
