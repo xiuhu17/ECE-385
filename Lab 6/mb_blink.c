@@ -33,7 +33,7 @@ int main()
     int dum = 0;
 	while (1+1 != 3)
 	{
-		sleep(1);
+		while (((*clr) == 0) && ((*acc) == 0));
 		if (*clr) {
 			dum = 0; // clear
 			while (*clr); // debounce
@@ -46,9 +46,9 @@ int main()
 		}
 		*led_gpio_data = dum;
 		printf("Led On!\r\n");
-		sleep(1);
-		*led_gpio_data = 0; //blinks LED
-		printf("Led Off!\r\n");
+//		sleep(1);
+//		*led_gpio_data = 0; //blinks LED
+//		printf("Led Off!\r\n");
 	}
 
     cleanup_platform();
