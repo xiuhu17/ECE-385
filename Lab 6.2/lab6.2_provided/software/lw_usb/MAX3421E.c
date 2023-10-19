@@ -28,6 +28,12 @@ static XGpio Gpio_int;
 static XSpi_Config *ConfigPtr;	/* Pointer to Configuration data */
 XTmrCtr Usb_timer;
 
+#define SUCCESS_ 0
+#define _GRAB_REG_(x) (1 << (x >> 3))
+
+BYTE send_buf_[20];
+BYTE receive_buf_[20];
+
 //Initialization of SPI port is already done for you
 void SPI_init() {
 
@@ -73,6 +79,35 @@ void MAXreg_wr(BYTE reg, BYTE val) {
 	//read return code from SPI peripheral (see Xilinx examples) 
 	//if return code != 0 print an error
 	//deselect MAX3421E (may not be necessary if you are using SPI peripheral)
+	
+	// select reg
+	int set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, _GRAB_REG_(reg));
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_wr_set_ERROR\n");
+	}
+
+	// get the command and the data 
+	BYTE Command = reg + 2;
+	BYTE Data = val;
+	
+	// write into buf
+	memset(send_buf_, 0, sizeof(send_buf_));
+	BYTE* send_buf = send_buf_;
+	BYTE* receive_buf = NULL;
+	send_buf[0] = Command;
+	send_buf[1] = Data;
+
+	// send using the transfer
+	int transfer_code = XSpi_Transfer(&SpiInstance, send_buf, receive_buf, 2);
+	if (transfer_code != SUCCESS_) {
+		xil_printf("MAXreg_wr_transfer_ERROR\n");
+	}
+
+	// deselect
+	set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, 0);
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_wr_desel_ERROR\n");
+	}
 }
 
 
@@ -87,6 +122,41 @@ BYTE* MAXbytes_wr(BYTE reg, BYTE nbytes, BYTE* data) {
 	//if return code != 0 print an error
 	//deselect MAX3421E (may not be necessary if you are using SPI peripheral)
 	//return (data + nbytes);
+
+	// store the return val
+	BYTE* res = data + nbytes;
+
+	// select reg
+	int set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, _GRAB_REG_(reg));
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_wr_set_ERROR\n");
+	}
+
+	// get the command and the data 
+	BYTE Command = reg + 2;
+	
+	// write into buf
+	memset(send_buf_, 0, sizeof(send_buf_));
+	BYTE* send_buf = send_buf_;
+	BYTE* receive_buf = NULL;
+	send_buf[0] = Command;
+	for (int i = 0; i < nbytes; ++i) {
+		send_buf[i+1] = data[i];
+	}
+
+	// send using the transfer
+	int transfer_code = XSpi_Transfer(&SpiInstance, send_buf, receive_buf, (1 + nbytes));
+	if (transfer_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_wr_transfer_ERROR\n");
+	}
+
+	// deselect
+	set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, 0);
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_wr_desel_ERROR\n");
+	}
+
+	return res;
 }
 
 /* Single host register read        */
@@ -99,6 +169,39 @@ BYTE MAXreg_rd(BYTE reg) {
 	//if return code != 0 print an error
 	//deselect MAX3421E (may not be necessary if you are using SPI peripheral)
 	//return val
+
+	// select reg
+	int set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, _GRAB_REG_(reg));
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_rd_set_ERROR\n");
+	}
+
+	// get the command and the data 
+	BYTE Command = reg;
+	
+	// write into buf
+	memset(send_buf_, 0, sizeof(send_buf_));
+	memset(receive_buf_, 0, sizeof(receive_buf_));
+	BYTE* send_buf = send_buf_;
+	BYTE* receive_buf = receive_buf_;
+	send_buf[0] = Command;
+
+	// send using the transfer
+	int transfer_code = XSpi_Transfer(&SpiInstance, send_buf, receive_buf, 2);
+	if (transfer_code != SUCCESS_) {
+		xil_printf("MAXreg_rd_transfer_ERROR\n");
+	}
+
+	// first byte is status, dnt need
+	BYTE res = receive_buf[1];
+
+	// deselect
+	set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, 0);
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_rd_desel_ERROR\n");
+	}
+
+	return res;
 }
 
 
@@ -114,6 +217,44 @@ BYTE* MAXbytes_rd(BYTE reg, BYTE nbytes, BYTE* data) {
 	//if return code != 0 print an error
 	//deselect MAX3421E (may not be necessary if you are using SPI peripheral)
 	//return (data + nbytes);
+
+	// store 
+	BYTE* res = data + nbytes;
+
+	// select reg
+	int set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, _GRAB_REG_(reg));
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_rd_set_ERROR\n");
+	}
+
+	// get the command and the data 
+	BYTE Command = reg;
+	
+	// write into buf
+	memset(send_buf_, 0, sizeof(send_buf_));
+	memset(receive_buf_, 0, sizeof(receive_buf_));
+	BYTE* send_buf = send_buf_;
+	BYTE* receive_buf = receive_buf_;
+	send_buf[0] = Command;
+
+	// send using the transfer
+	int transfer_code = XSpi_Transfer(&SpiInstance, send_buf, receive_buf, (1 + nbytes));
+	if (transfer_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_rd_transfer_ERROR\n");
+	}
+
+	// first byte is status, dnt need
+	for (int i = 0; i < nbytes; ++ i) {
+		data[i] = receive_buf[i+1];
+	}
+
+	// deselect
+	set_slave_code = XSpi_SetSlaveSelect(&SpiInstance, 0);
+	if (set_slave_code != SUCCESS_) {
+		xil_printf("MAXreg_bytes_rd_desel_ERROR\n");
+	}
+
+	return res;
 }
 /* reset MAX3421E using chip reset bit. SPI configuration is not affected   */
 void MAX3421E_reset(void) {

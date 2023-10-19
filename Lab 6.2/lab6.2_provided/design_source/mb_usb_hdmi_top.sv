@@ -79,7 +79,7 @@ module mb_usb_hdmi_top(
         .hex_grid(hex_gridB)
     );
     
-    mb_usb mb_block_i(
+    mb_block mb_block_i(
         .clk_100MHz(Clk),
         .gpio_usb_int_tri_i(gpio_usb_int_tri_i),
         .gpio_usb_keycode_0_tri_o(keycode0_gpio),
