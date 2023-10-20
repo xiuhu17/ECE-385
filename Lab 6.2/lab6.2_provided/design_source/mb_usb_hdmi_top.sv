@@ -150,7 +150,7 @@ module mb_usb_hdmi_top(
     // therefore, it will produce "multiple" ball since we change the position of ball [tons of time base on the high-speed-clock] within the vde clock-interval
     ball ball_instance(
         .Reset(reset_ah),
-        .frame_clk(vde),           //Figure out what this should be so that the ball will move 
+        .frame_clk(vsync),           //Figure out what this should be so that the ball will move 
         .keycode(keycode0_gpio[7:0]),    //Notice: only one keycode connected to ball by default
         .BallX(ballxsig),
         .BallY(ballysig),
