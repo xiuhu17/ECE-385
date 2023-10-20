@@ -19,7 +19,8 @@ module  ball ( input logic Reset, frame_clk,
                output logic [9:0]  BallX, BallY, BallS );
     
     logic [9:0] Ball_X_Motion, Ball_Y_Motion;
-	 
+	
+    //only display pixels between horizontal 0-639 and vertical 0-479 (640x480)
     parameter [9:0] Ball_X_Center=320;  // Center position on the X axis
     parameter [9:0] Ball_Y_Center=240;  // Center position on the Y axis
     parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
@@ -28,7 +29,7 @@ module  ball ( input logic Reset, frame_clk,
     parameter [9:0] Ball_Y_Max=479;     // Bottommost point on the Y axis
     parameter [9:0] Ball_X_Step=1;      // Step size on the X axis
     parameter [9:0] Ball_Y_Step=1;      // Step size on the Y axis
-
+    
     assign BallS = 16;  // default ball size
    
     always_ff @ (posedge frame_clk or posedge Reset) //make sure the frame clock is instantiated correctly
@@ -36,31 +37,66 @@ module  ball ( input logic Reset, frame_clk,
         if (Reset)  // asynchronous Reset
         begin 
             Ball_Y_Motion <= 10'd0; //Ball_Y_Step;
-			Ball_X_Motion <= 10'd1; //Ball_X_Step;
+			Ball_X_Motion <= 10'd0; //Ball_X_Step;
 			BallY <= Ball_Y_Center;
 			BallX <= Ball_X_Center;
         end
            
         else 
-        begin 
-				 if ( (BallY + BallS) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-					  Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (BallY - BallS) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
-					  Ball_Y_Motion <= Ball_Y_Step;
-					  
-				  else if ( (BallX + BallS) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
-					  Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);  // 2's complement.
-					  
-				 else if ( (BallX - BallS) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
-					  Ball_X_Motion <= Ball_X_Step;
-					  
-				 else 
-					  Ball_Y_Motion <= Ball_Y_Motion;  // Ball is somewhere in the middle, don't bounce, just keep moving
-					  
-				 //modify to control ball motion with the keycode
-				 if (keycode == 8'h1A)
-                     Ball_Y_Motion <= -10'd1;
+        begin     // motion is the vector(with direction), vector = move / clk
+                  // step is parameter, denote the scale of each vector
+
+                        // initial set
+                		if (keycode == 8'h1A)  // W
+                            begin
+                                Ball_Y_Motion <= -10'd1;
+                                Ball_X_Motion <= 10'd0;
+                            end 
+                        else if (keycode == 8'h16) // S
+                            begin 
+                                Ball_Y_Motion <= 10'd1;
+                                Ball_X_Motion <= 10'd0;
+                            end
+                        else if (keycode == 8'h4) // A
+                            begin 
+                                Ball_X_Motion <= -10'd1;
+                                Ball_Y_Motion <=  10'd0;
+                            end
+                        else if (keycode == 8'h7) // D
+                            begin 
+                                Ball_X_Motion <= 10'd1;
+                                Ball_Y_Motion <=  10'd0;
+                            end
+
+                 if ( (BallY + BallS) >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
+					begin  
+                        if ((keycode == 8'h16) || (Ball_Y_Motion == 10'd1)) // S
+                            begin 
+                                Ball_Y_Motion <= 10'd0;
+                            end 
+                    end
+				 if ( (BallY - BallS) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
+                    begin
+					    if ((keycode == 8'h1A) || (Ball_Y_Motion == -10'd1))  // W
+                            begin
+                                Ball_Y_Motion <= 10'd0;
+                            end 
+                    end
+				 if ( (BallX + BallS) >= Ball_X_Max )  // Ball is at the Right edge, BOUNCE!
+                    begin 
+					  if ((keycode == 8'h7) || (Ball_X_Motion == 10'd1)) // D
+                            begin 
+                                Ball_X_Motion <= 10'd0;
+                            end
+                    end
+				 if ( (BallX - BallS) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
+					begin
+                        if ((keycode == 8'h4) || (Ball_X_Motion == -10'd1)) // A
+                            begin 
+                                Ball_X_Motion <= 10'd0;
+                            end
+                    end
+
 				 
 				 BallY <= (BallY + Ball_Y_Motion);  // Update ball position
 				 BallX <= (BallX + Ball_X_Motion);

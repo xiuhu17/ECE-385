@@ -47,7 +47,7 @@ module  vga_controller ( input        pixel_clk,        // 50 MHz clock
     //Disable Composite Sync
     assign sync = 1'b0;
      
-   
+      // raster order
 	//Runs the horizontal counter  when it resets vertical counter is incremented
    always_ff @ (posedge pixel_clk or posedge reset )
 	begin: counter_proc
@@ -98,7 +98,8 @@ module  vga_controller ( input        pixel_clk,        // 50 MHz clock
             else 
 			       vs <= 1'b1;
     end
-       
+    
+    // 639 = Ball_X_Max; 479 = Ball_Y_Max
     //only display pixels between horizontal 0-639 and vertical 0-479 (640x480)
     //(This signal is registered within the DAC chip, so we can leave it as pure combinational logic here)    
     always_comb
