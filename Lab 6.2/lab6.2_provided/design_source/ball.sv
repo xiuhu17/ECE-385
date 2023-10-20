@@ -49,7 +49,7 @@ module  ball ( input logic Reset, frame_clk,
                         // initial set
                 		if (keycode == 8'h1A)  // W
                             begin
-                                Ball_Y_Motion <= -10'd1;
+                                Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
                                 Ball_X_Motion <= 10'd0;
                             end 
                         else if (keycode == 8'h16) // S
@@ -59,7 +59,7 @@ module  ball ( input logic Reset, frame_clk,
                             end
                         else if (keycode == 8'h4) // A
                             begin 
-                                Ball_X_Motion <= -10'd1;
+                                Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
                                 Ball_Y_Motion <=  10'd0;
                             end
                         else if (keycode == 8'h7) // D
@@ -75,9 +75,9 @@ module  ball ( input logic Reset, frame_clk,
                                 Ball_Y_Motion <= 10'd0;
                             end 
                     end
-				 if ( (BallY - BallS) <= Ball_Y_Min )  // Ball is at the top edge, BOUNCE!
+				 if ( BallY <=  BallS )  // Ball is at the top edge, BOUNCE!
                     begin
-					    if ((keycode == 8'h1A) || (Ball_Y_Motion == -10'd1))  // W
+					    if ((keycode == 8'h1A) || (Ball_Y_Motion == (~ (Ball_Y_Step) + 1'b1)))  // W
                             begin
                                 Ball_Y_Motion <= 10'd0;
                             end 
@@ -89,9 +89,9 @@ module  ball ( input logic Reset, frame_clk,
                                 Ball_X_Motion <= 10'd0;
                             end
                     end
-				 if ( (BallX - BallS) <= Ball_X_Min )  // Ball is at the Left edge, BOUNCE!
+				 if ( BallX <= BallS )  // Ball is at the Left edge, BOUNCE!
 					begin
-                        if ((keycode == 8'h4) || (Ball_X_Motion == -10'd1)) // A
+                        if ((keycode == 8'h4) || (Ball_X_Motion == (~ (Ball_X_Step) + 1'b1))) // A
                             begin 
                                 Ball_X_Motion <= 10'd0;
                             end
