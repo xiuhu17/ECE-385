@@ -49,7 +49,7 @@ module CNTRL(input logic [9:0] drawX, drawY ,
                     inv = reg_col_use[7];
                     font_addr = y_off + (16 * reg_col_use[6:0]);
                     
-                    if (font_data[x_off] ^ inv == 1'b1) // f
+                    if (font_data[8-x_off] ^ inv == 1'b1) // f
                         begin 
                             red = reg_control_data[24:21];
                             green = reg_control_data[20:17];

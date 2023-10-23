@@ -49,6 +49,18 @@ module hdmi_text_controller_v1_0 #
 );
 
 //additional logic variables as necessary to support VGA, and HDMI modules.
+// User logic ends
+logic reset_ah; // active low
+logic locked;
+logic Clk, clk_25MHz, clk_125MHz;
+logic hsync, vsync, vde;
+logic [3:0] red, green, blue;
+logic [9:0] drawX, drawY, ballxsig, ballysig, ballsizesig;
+logic [11:0] reg_col_addr;
+logic [31:0] reg_col_data; // for individual byte info: ivn & idx_for_font, from hdmi_axi
+logic [31:0] reg_control_data;
+logic [10:0] font_addr;
+logic [7:0]   font_data;
 
 // Instantiation of Axi Bus Interface AXI
 hdmi_text_controller_v1_0_AXI # ( 
@@ -75,7 +87,10 @@ hdmi_text_controller_v1_0_AXI # (
     .S_AXI_RDATA(axi_rdata),
     .S_AXI_RRESP(axi_rresp),
     .S_AXI_RVALID(axi_rvalid),
-    .S_AXI_RREADY(axi_rready)
+    .S_AXI_RREADY(axi_rready),
+    .reg_col_addr(reg_col_addr),
+    .reg_col_data(reg_col_data),
+    .reg_control_data(reg_control_data)
 );
 
 
@@ -83,13 +98,6 @@ hdmi_text_controller_v1_0_AXI # (
 //top-level from the previous lab. You should get the IP to generate a valid HDMI signal (e.g. blue screen or gradient)
 //prior to working on the text drawing.
 
-// User logic ends
-logic reset_ah; // active low
-logic locked;
-logic Clk, clk_25MHz, clk_125MHz;
-logic hsync, vsync, vde;
-logic [3:0] red, green, blue;
-logic [9:0] drawX, drawY, ballxsig, ballysig, ballsizesig;
 
 // assign
 assign reset_ah = axi_aresetn;
@@ -143,8 +151,26 @@ assign Clk = axi_aclk;
         .drawX(drawX),
         .drawY(drawY)
     );    
-assign red = 4'b1110;
-assign green = 4'b0110; 
-assign blue = 4'b0110;
+    
+    font_rom ft(
+        .addr(font_addr),
+        .data(font_data)        
+    );
+    
+    CNTRL cntrl(
+        .drawX(drawX), 
+        .drawY(drawY) , 
+
+         .reg_col_addr(reg_col_addr),
+         .reg_col_data(reg_col_data), // for individual byte info: ivn & idx_for_font, from hdmi_axi
+         .reg_control_data(reg_control_data),
+
+         .font_addr(font_addr),
+         .font_data(font_data),
+
+          .red(red), 
+          .green(green), 
+          .blue(blue)
+    );
 
 endmodule
