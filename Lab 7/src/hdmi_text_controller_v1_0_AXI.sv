@@ -122,7 +122,7 @@ logic  	axi_rvalid;
 // ADDR_LSB = 2 for 32 bits (n downto 2)
 // ADDR_LSB = 3 for 64 bits (n downto 3)
 localparam integer ADDR_LSB = (C_S_AXI_DATA_WIDTH/32) + 1;
-localparam integer OPT_MEM_ADDR_BITS = 9; // we need [11:2] to be large enough for 601 registers
+localparam integer OPT_MEM_ADDR_BITS = 9;
 //----------------------------------------------
 //-- Signals for user logic register space example
 //------------------------------------------------
@@ -261,8 +261,6 @@ begin
             // Respective byte enables are asserted as per write strobes, note the use of the index part select operator
 			// '+:', you will need to understand how this operator works.
             slv_regs[axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]][(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-            // [3:2] because [3:2] for 4 reg, and [1:0] is for four bytes/char per register
-            // [11:2] need 11-2+1 = 10 bits, for 2**10 = 1024 > 601 register
           end  
       end
   end
@@ -369,7 +367,7 @@ assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
 always_comb
 begin
       // Address decoding for reading registers
-     reg_data_out = slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
+     reg_data_out <= slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
 end
 
 // Output register or memory read data

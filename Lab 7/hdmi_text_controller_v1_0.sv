@@ -10,7 +10,7 @@ module hdmi_text_controller_v1_0 #
 
     // Parameters of Axi Slave Bus Interface S00_AXI
     parameter integer C_AXI_DATA_WIDTH	= 32,
-    parameter integer C_AXI_ADDR_WIDTH	= 11 //note that we changed this from 4 in the provided template
+    parameter integer C_AXI_ADDR_WIDTH	= 12 //note that we changed this from 4 in the provided template
 )
 (
     // Users to add ports here
@@ -84,7 +84,7 @@ hdmi_text_controller_v1_0_AXI # (
 //prior to working on the text drawing.
 
 // User logic ends
-logic reset_ah;
+logic reset_ah; // active low
 logic locked;
 logic Clk, clk_25MHz, clk_125MHz;
 logic hsync, vsync, vde;
@@ -99,21 +99,10 @@ assign Clk = axi_aclk;
     clk_wiz_0 clk_wiz (
         .clk_out1(clk_25MHz),
         .clk_out2(clk_125MHz),
-        .reset(reset_ah),
+        .reset(~reset_ah),
         .locked(locked),
         .clk_in1(Clk)
     );
-    
-   //VGA Sync signal generator
-    vga_controller vga (
-       .pixel_clk(clk_25MHz),
-       .reset(reset_ah),
-        .hs(hsync),
-        .vs(vsync),
-        .active_nblank(vde),
-        .drawX(drawX),
-        .drawY(drawY)
-    );    
 
     //Real Digital VGA to HDMI converter
     hdmi_tx_0 vga_to_hdmi (
@@ -122,7 +111,7 @@ assign Clk = axi_aclk;
         .pix_clkx5(clk_125MHz),
         .pix_clk_locked(locked),
         //Reset is active LOW
-        .rst(reset_ah),
+        .rst(~reset_ah),
         //Color and Sync Signals
         .red(red),
         .green(green),
@@ -143,6 +132,19 @@ assign Clk = axi_aclk;
         .TMDS_DATA_P(hdmi_tx_p),         
         .TMDS_DATA_N(hdmi_tx_n)          
     );
-
+    
+    //VGA Sync signal generator
+    vga_controller vga (
+       .pixel_clk(clk_25MHz),
+       .reset(~reset_ah),
+        .hs(hsync),
+        .vs(vsync),
+        .active_nblank(vde),
+        .drawX(drawX),
+        .drawY(drawY)
+    );    
+assign red = 4'b1110;
+assign green = 4'b0110; 
+assign blue = 4'b0110;
 
 endmodule
