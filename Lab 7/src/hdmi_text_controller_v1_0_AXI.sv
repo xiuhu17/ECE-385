@@ -101,7 +101,10 @@ module hdmi_text_controller_v1_0_AXI #
     output logic  S_AXI_RVALID,
     // Read ready. This signal indicates that the master can
         // accept the read data and response information.
-    input logic  S_AXI_RREADY
+    input logic  S_AXI_RREADY,
+    input logic [11:0] reg_col_addr,
+    output logic [31:0] reg_col_data, // for individual byte info: ivn & idx_for_font, from hdmi_axi
+    output logic [31:0] reg_control_data
 );
 
 // AXI4LITE signals
@@ -368,6 +371,12 @@ always_comb
 begin
       // Address decoding for reading registers
      reg_data_out <= slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
+end
+
+always_comb
+begin
+    reg_col_data <= slv_regs[reg_col_addr];
+    reg_control_data <= slv_regs[600];
 end
 
 // Output register or memory read data

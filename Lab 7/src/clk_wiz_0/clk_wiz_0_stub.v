@@ -1,10 +1,10 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
-// Date        : Mon Oct 23 11:39:17 2023
+// Date        : Mon Oct 23 15:37:20 2023
 // Host        : zhihaow6 running 64-bit Ubuntu 22.04.3 LTS
-// Command     : write_verilog -force -mode synth_stub
-//               /home/zhihaow6/Desktop/Vivado/ip_repo/hdmi_text_controller_1_0/src/clk_wiz_0/clk_wiz_0_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top clk_wiz_0 -prefix
+//               clk_wiz_0_ clk_wiz_0_stub.v
 // Design      : clk_wiz_0
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7s50csga324-1
