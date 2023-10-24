@@ -64,3 +64,23 @@ module CNTRL(input logic [9:0] drawX, drawY ,
                 end 
         end
 endmodule
+
+// comment for this code:
+// the drawX and drawY are pixel, they are indeex 800*480
+// we have 600 register, per register is 32bit, 4 * bytes, 4 * char, that means, each register store 4 char infomation. 
+// per char is 8bit, store [inv, index_of_char]
+// we use (drawX >> 3) << 3 as the start horizontal-pixel for current char
+// we use use (drawY >> 4) << 4 as start vertical-pixel for current char
+// we use x_off as the current distance from the start horizontal-pixel 
+// we use y_off as the current distance from the start vertical-pixel 
+// (drawX >> 3) is the place of a char inside the register, and we use the least two bits(10'b11) of it to indicate its position inside the register(per register has four character)
+// we uase (drawY >> 4) * 80 + (drawX >> 3) as the current index of char, the range is from [0-2399]
+//      since per reg is four characters, we use reg_col_addr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] to choose which reg it belongs to (this is inside hdmi_text_controller_v1_0_AXI.sv file)
+//  reg_col_use is what we get from hdmi_text_controller_v1_0_AXI.sv file, it is a register, 32 bits, so we only pick 8bit of it by using (drawX >> 3)
+//  inv = reg_col_use[7]; indicates whether we invert the color or not
+//  font_addr = y_off + (16 * reg_col_use[6:0]); use the index_of_char(pick the kind of char, total 128 kinds of char), and use y_offset to choose which line of the char we are drawing, we have 16 lines, refer font.sv
+// finally we use font_addr to get the font_data from font.sv. Since this data is 8 bit, sayng the width of each character is 8 bit. we use x_offset to get the current bit
+// now if inv = 1, we need to invert the color, otherwise, stick to the same
+// here I use the simplified xor logic, as you can test yourself
+// the color infomation is stored in the color register, which is the 601th register inside the vram
+// the read from  hdmi_text_controller_v1_0_AXI for drawing is different from one using the handshake.
