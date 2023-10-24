@@ -370,13 +370,13 @@ assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
 always_comb
 begin
       // Address decoding for reading registers
-     reg_data_out <= slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
+     reg_data_out = slv_regs[axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
 end
 
 always_comb
 begin
-    reg_col_data <= slv_regs[reg_col_addr];
-    reg_control_data <= slv_regs[600];
+    reg_col_data = slv_regs[reg_col_addr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB]];
+    reg_control_data = slv_regs[600];
 end
 
 // Output register or memory read data

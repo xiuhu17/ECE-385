@@ -1,7 +1,7 @@
 -- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
--- Date        : Mon Oct 23 16:24:55 2023
+-- Date        : Mon Oct 23 19:01:29 2023
 -- Host        : zhihaow6 running 64-bit Ubuntu 22.04.3 LTS
 -- Command     : write_vhdl -force -mode synth_stub
 --               /home/zhihaow6/Desktop/Vivado/ip_repo/hdmi_text_controller_1_0/src/hdmi_tx_0/hdmi_tx_0_stub.vhdl
