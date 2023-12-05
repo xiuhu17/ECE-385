@@ -1,6 +1,6 @@
-module S_BOX_MAP(input logic[5:0] input_data, input logic[2:0] box_sel,
-                 output logic[3:0] output_data);
-    logic [3:0]S_BOX_ROM[8][4][16] = {
+module S_BOX_MAP(input logic[47:0] input_data,
+                 output logic[31:0] output_data);
+    parameter [3:0]S_BOX_ROM[8][4][16] = {
         {
             {{14},{4},{13},{1},{2},{15},{11},{8},{3},{10},{6},{12},{5},{9},{0},{7}},
             {{0},{15},{7},{4},{14},{2},{13},{1},{10},{6},{12},{11},{9},{5},{3},{8}},
@@ -50,6 +50,28 @@ module S_BOX_MAP(input logic[5:0] input_data, input logic[2:0] box_sel,
             {{7},{11},{4},{1},{9},{12},{14},{2},{0},{6},{10},{13},{15},{3},{5},{8}},
             {{2},{1},{14},{7},{4},{10},{8},{13},{15},{12},{9},{0},{3},{5},{6},{11}}
         }
+    };
+
+    logic [1:0] row0, row1, row2, row3, row4, row5, row6, row7;
+    assign row0 = {{input_data[47]}, {input_data[42]}};
+    assign row1 = {{input_data[41]}, {input_data[36]}};
+    assign row2 = {{input_data[35]}, {input_data[30]}};
+    assign row3 = {{input_data[29]}, {input_data[24]}};
+    assign row4 = {{input_data[23]}, {input_data[18]}};
+    assign row5 = {{input_data[17]}, {input_data[12]}};
+    assign row6 = {{input_data[11]}, {input_data[6]}};
+    assign row7 = {{input_data[5]}, {input_data[0]}};
+
+
+    assign output_data = {
+        {S_BOX_ROM[row0][input_data[46:43]]},
+        {S_BOX_ROM[row1][input_data[40:37]]},
+        {S_BOX_ROM[row2][input_data[34:31]]},
+        {S_BOX_ROM[row3][input_data[28:25]]},
+        {S_BOX_ROM[row4][input_data[22:19]]},
+        {S_BOX_ROM[row5][input_data[16:13]]},
+        {S_BOX_ROM[row6][input_data[10:7]]},
+        {S_BOX_ROM[row7][input_data[4:1]]}
     };
 
 endmodule
