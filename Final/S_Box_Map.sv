@@ -19,7 +19,7 @@ module S_BOX_MAP_1(input logic[5:0] input_data,
             {{0},{14},{7},{11},{10},{4},{13},{1},{5},{8},{12},{6},{9},{3},{2},{15}},
             {{13},{8},{10},{1},{3},{15},{4},{2},{11},{6},{7},{12},{0},{5},{14},{9}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_1[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_2(input logic[5:0] input_data,
@@ -31,7 +31,7 @@ module S_BOX_MAP_2(input logic[5:0] input_data,
             {{13},{6},{4},{9},{8},{15},{3},{0},{11},{1},{2},{12},{5},{10},{14},{7}},
             {{1},{10},{13},{0},{6},{9},{8},{7},{4},{15},{14},{3},{11},{5},{2},{12}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_2[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_3(input logic[5:0] input_data,
@@ -43,7 +43,7 @@ module S_BOX_MAP_3(input logic[5:0] input_data,
             {{10},{6},{9},{0},{12},{11},{7},{13},{15},{1},{3},{14},{5},{2},{8},{4}},
             {{3},{15},{0},{6},{10},{1},{13},{8},{9},{4},{5},{11},{12},{7},{2},{14}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_3[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_4(input logic[5:0] input_data,
@@ -55,7 +55,7 @@ module S_BOX_MAP_4(input logic[5:0] input_data,
             {{4},{2},{1},{11},{10},{13},{7},{8},{15},{9},{12},{5},{6},{3},{0},{14}},
             {{11},{8},{12},{7},{1},{14},{2},{13},{6},{15},{0},{9},{10},{4},{5},{3}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_4[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_5(input logic[5:0] input_data,
@@ -67,7 +67,7 @@ module S_BOX_MAP_5(input logic[5:0] input_data,
             {{9},{14},{15},{5},{2},{8},{12},{3},{7},{0},{4},{10},{1},{13},{11},{6}},
             {{4},{3},{2},{12},{9},{5},{15},{10},{11},{14},{1},{7},{6},{0},{8},{13}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_5[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_6(input logic[5:0] input_data,
@@ -79,7 +79,7 @@ module S_BOX_MAP_6(input logic[5:0] input_data,
             {{1},{4},{11},{13},{12},{3},{7},{14},{10},{15},{6},{8},{0},{5},{9},{2}},
             {{6},{11},{13},{8},{1},{4},{10},{7},{9},{5},{0},{15},{14},{2},{3},{12}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_6[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_7(input logic[5:0] input_data,
@@ -91,7 +91,7 @@ module S_BOX_MAP_7(input logic[5:0] input_data,
             {{7},{11},{4},{1},{9},{12},{14},{2},{0},{6},{10},{13},{15},{3},{5},{8}},
             {{2},{1},{14},{7},{4},{10},{8},{13},{15},{12},{9},{0},{3},{5},{6},{11}}
         };
-    assign output_data = S_BOX_ROM_0[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
+    assign output_data = S_BOX_ROM_7[{{input_data[5]}, {input_data[0]}}][{input_data[4:1]}];
 endmodule
 
 module S_BOX_MAP_WRAPPER(input logic[47:0] input_data,
