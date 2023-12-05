@@ -140,6 +140,6 @@ module Decrypt_Top(input logic[63:0] Key, input logic[63:0] Data
     Data_Action data_action_15(.Data(Data_15), .Sub_Key(Key_0), .Data_After_Action(Data_Final));
 
     //
-    FP_Permutate fp_per(.input_data({{Data_Final[31:0]}, {Data_Final[63:32]}}), .output_data(Decrypt_Data))
+    FP_Permutate fp_per(.input_data({{Data_Final[31:0]}, {Data_Final[63:32]}}), .output_data(Decrypt_Data));
 
 endmodule
