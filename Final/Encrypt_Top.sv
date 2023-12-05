@@ -1,4 +1,5 @@
-module Encrypt_Top(input logic[63:0] Key, input logic[63:0] Data);
+module Encrypt_Top(input logic[63:0] Key, input logic[63:0] Data
+                    output logic[63:0] Encrypt_Data);
     // 
     logic [55:0] Key_After_PC1;
     PC1_Key pc1_key(.input_data(Key), .permutate_data(Key_After_PC1));
@@ -102,9 +103,43 @@ module Encrypt_Top(input logic[63:0] Key, input logic[63:0] Data);
 
 
     // Data Part
-    logic [63:0] Data_After_Init_Per;
-    IP_Data ip_data(.input_data(Data), .permutate_data(Data_After_Init_Per));
-    
+    logic [63:0] Data_0, Data_1, Data_2, Data_3, Data_4, Data_5, Data_6, Data_7, Data_8, Data_9, Data_10, Data_11, Data_12, Data_13, Data_14, Data_15, Data_Final;
+    IP_Data ip_data(.input_data(Data), .permutate_data(Data_0));
 
+    // 
+    Data_Action data_action_0(.Data(Data_0), .Sub_Key(Key_0), .Data_After_Action(Data_1));
+
+    Data_Action data_action_1(.Data(Data_1), .Sub_Key(Key_1), .Data_After_Action(Data_2));
+
+    Data_Action data_action_2(.Data(Data_2), .Sub_Key(Key_2), .Data_After_Action(Data_3));
+
+    Data_Action data_action_3(.Data(Data_3), .Sub_Key(Key_3), .Data_After_Action(Data_4));
+
+    Data_Action data_action_4(.Data(Data_4), .Sub_Key(Key_4), .Data_After_Action(Data_5));
+
+    Data_Action data_action_5(.Data(Data_5), .Sub_Key(Key_5), .Data_After_Action(Data_6));
+
+    Data_Action data_action_6(.Data(Data_6), .Sub_Key(Key_6), .Data_After_Action(Data_7));
+
+    Data_Action data_action_7(.Data(Data_7), .Sub_Key(Key_7), .Data_After_Action(Data_8));
+
+    Data_Action data_action_8(.Data(Data_8), .Sub_Key(Key_8), .Data_After_Action(Data_9));
+
+    Data_Action data_action_9(.Data(Data_9), .Sub_Key(Key_9), .Data_After_Action(Data_10));
+
+    Data_Action data_action_10(.Data(Data_10), .Sub_Key(Key_10), .Data_After_Action(Data_11));
+
+    Data_Action data_action_11(.Data(Data_11), .Sub_Key(Key_11), .Data_After_Action(Data_12));
+
+    Data_Action data_action_12(.Data(Data_12), .Sub_Key(Key_12), .Data_After_Action(Data_13));
+
+    Data_Action data_action_13(.Data(Data_13), .Sub_Key(Key_13), .Data_After_Action(Data_14));
+
+    Data_Action data_action_14(.Data(Data_14), .Sub_Key(Key_14), .Data_After_Action(Data_15));
+
+    Data_Action data_action_15(.Data(Data_15), .Sub_Key(Key_15), .Data_After_Action(Data_Final));
+
+    //
+    FP_Permutate fp_per(.input_data({{Data_Final[31:0]}, {Data_Final[63:32]}}), .output_data(Encrypt_Data))
 
 endmodule
