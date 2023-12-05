@@ -1,4 +1,5 @@
 // 1, 2, 9, 16 
+// 0, 1, 8, 15
 module LeftShiftOne_Key( input logic [55:0] input_data,
             output logic [55:0] shift_data );
 
