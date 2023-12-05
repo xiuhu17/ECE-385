@@ -96,13 +96,13 @@ endmodule
 
 module S_BOX_MAP_WRAPPER(input logic[47:0] input_data,
                  output logic[31:0] output_data);
-    S_BOX_MAP_0(.input_data(input_data[47:42]), .output_data(output_data[31:28]));
-    S_BOX_MAP_1(.input_data(input_data[41:36]), .output_data(output_data[27:24]));
-    S_BOX_MAP_2(.input_data(input_data[35:30]), .output_data(output_data[23:20]));
-    S_BOX_MAP_3(.input_data(input_data[29:24]), .output_data(output_data[19:16]));
-    S_BOX_MAP_4(.input_data(input_data[23:18]), .output_data(output_data[15:12]));
-    S_BOX_MAP_5(.input_data(input_data[17:12]), .output_data(output_data[11:8]));
-    S_BOX_MAP_6(.input_data(input_data[11:6]), .output_data(output_data[7:4]));
-    S_BOX_MAP_7(.input_data(input_data[5:0]), .output_data(output_data[3:0]));
+    S_BOX_MAP_0 s_box_map0(.input_data(input_data[47:42]), .output_data(output_data[31:28]));
+    S_BOX_MAP_1 s_box_map1(.input_data(input_data[41:36]), .output_data(output_data[27:24]));
+    S_BOX_MAP_2 s_box_map2(.input_data(input_data[35:30]), .output_data(output_data[23:20]));
+    S_BOX_MAP_3 s_box_map3(.input_data(input_data[29:24]), .output_data(output_data[19:16]));
+    S_BOX_MAP_4 s_box_map4(.input_data(input_data[23:18]), .output_data(output_data[15:12]));
+    S_BOX_MAP_5 s_box_map5(.input_data(input_data[17:12]), .output_data(output_data[11:8]));
+    S_BOX_MAP_6 s_box_map6(.input_data(input_data[11:6]), .output_data(output_data[7:4]));
+    S_BOX_MAP_7 s_box_map7(.input_data(input_data[5:0]), .output_data(output_data[3:0]));
 endmodule
 
