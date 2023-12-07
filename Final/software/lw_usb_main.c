@@ -60,6 +60,9 @@ void printHex (u32 data, unsigned channel)
 }
 
 int main() {
+	//////////////////////////////////////////////////////////
+	// need a map for translation
+	//////////////////////////////////////////////////////////
     init_platform();
     XGpio_Initialize(&Gpio_hex, XPAR_GPIO_USB_KEYCODE_DEVICE_ID);
    	XGpio_SetDataDirection(&Gpio_hex, 1, 0x00000000); //configure hex display GPIO
@@ -112,7 +115,7 @@ int main() {
 					xil_printf("-------------------------------------- \n");
 					idx = 0;
 				} else {
-					if (kbdbuf.keycode[0]) {
+					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
 						store[idx] = kbdbuf.keycode[0];
 						idx += 1;
 					}
