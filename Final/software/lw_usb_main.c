@@ -79,6 +79,9 @@ int main() {
 	int idx = 0;
 	unsigned char store[8];
 
+	uint64_t* encrypt = XPAR_READ_ENCRYPT_BASEADDR;
+	uint64_t* decrypt = XPAR_READ_DECRYPT_BASEADDR;
+
 	xil_printf("initializing MAX3421E...\n");
 	MAX3421E_init();
 	xil_printf("initializing USB...\n");
@@ -114,6 +117,8 @@ int main() {
 					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
 					xil_printf("-------------------------------------- \n");
 					idx = 0;
+					xil_printf("--------------Data after Encrypt is: %u \n", *encrypt);
+					xil_printf("--------------Data after Decrypt is: %u \n", *decrypt);
 				} else {
 					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
 						store[idx] = kbdbuf.keycode[0];
