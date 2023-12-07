@@ -13,7 +13,7 @@ module Data_Action(input logic[63:0] Data, input logic[47:0] Sub_Key,
     S_BOX_MAP_WRAPPER s_box_mix(.input_data(Data_after_XOR), .output_data(Data_after_S_BOX));
 
     // 
-    logic[31:0] Data_after_P_Box
+    logic[31:0] Data_after_P_Box;
     P_BOX_Permutate p_box_per(.input_data(Data_after_S_BOX), .output_data(Data_after_P_Box));
 
     //
