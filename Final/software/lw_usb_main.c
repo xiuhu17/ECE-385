@@ -73,6 +73,8 @@ int main() {
 	BYTE runningdebugflag = 0;//flag to dump out a bunch of information when we first get to USB_STATE_RUNNING
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
+	int idx = 0;
+	unsigned char store[8];
 
 	xil_printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -96,14 +98,28 @@ int main() {
 					xil_printf("%x \n", rcode);
 					continue;
 				}
-				xil_printf("keycodes: ");
-				for (int i = 0; i < 6; i++) {
-					xil_printf("%x ", kbdbuf.keycode[i]);
-				}
+//				for (int i = 0; i < 6; i++) {
+//					xil_printf("%x ", kbdbuf.keycode[i]);
+//				}
 				//Outputs the first 4 keycodes using the USB GPIO channel 1
-				printHex (kbdbuf.keycode[0] + (kbdbuf.keycode[1]<<8) + (kbdbuf.keycode[2]<<16) + + (kbdbuf.keycode[3]<<24), 1);
+				if (idx == 8) {
+					xil_printf("Data Collected: ");
+					for (int i = 0; i < 8; i++) {
+						xil_printf("%x ", store[i]);
+					}
+					printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
+					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+					xil_printf("-------------------------------------- \n");
+					idx = 0;
+				} else {
+					if (kbdbuf.keycode[0]) {
+						store[idx] = kbdbuf.keycode[0];
+						idx += 1;
+					}
+				}
 				//Modify to output the last 2 keycodes on channel 2.
-				xil_printf("\n");
+				// xil_printf("\n");
+				xil_printf("----- Still collecting data ------\n");
 			}
 
 			else if (device == 2) {
