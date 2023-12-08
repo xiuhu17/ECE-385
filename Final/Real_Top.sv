@@ -47,6 +47,4 @@ module Real_Top(
             .Data_After_Decrypt({{Data_After_Decrypt_0}, {Data_After_Decrypt_1}})
     );
 
-
-
 endmodule
