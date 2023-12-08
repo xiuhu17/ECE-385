@@ -67,10 +67,11 @@ uint32_t* decrypt0 = XPAR_READ_DECRYPT_0_BASEADDR;
 uint32_t* decrypt1 = XPAR_READ_DECRYPT_1_BASEADDR;
 
 
-unsigned char buffer[64];
+unsigned char buffer[256];
 unsigned char store[8]; // input: store[0] ----> store[7]
 unsigned char store_encrypt[8];
 unsigned char store_decrypt[8];
+int idx = 0;
 
 char MAP(unsigned char a) {
 	if (a >= 4 && a <= 29) {
@@ -112,6 +113,23 @@ void Parser() {
 	store_decrypt[2] = (de0 & 0x00ff0000) >> 16;
 	store_decrypt[1] = (de0 & 0x0000ff00) >> 8;
 	store_decrypt[0] = (de0 & 0x000000ff);
+
+	for (int i = 0; i < 8; ++ i) {
+		DOWRITE(MAP(store_encrypt[i]), MAP(store_decrypt[i]));
+	}
+}
+
+void do_copying() {
+	for (int i = 0; i < idx; i += 8) {
+		for (int j = 0; j < 8; ++ j) {
+			if (i + j >= idx) {
+				store[j] = 44;
+			} else {
+				store[j] = buffer[i + j];
+			}
+		}
+		Parser();
+	}
 }
 
 int main() {
@@ -131,12 +149,12 @@ int main() {
 	BYTE runningdebugflag = 0;//flag to dump out a bunch of information when we first get to USB_STATE_RUNNING
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
-	int idx = 0;
 
 	xil_printf("initializing MAX3421E...\n");
 	MAX3421E_init();
 	xil_printf("initializing USB...\n");
 	USB_init();
+	hdmiClr();
 	INIT();
 
 	while (1) {
@@ -158,45 +176,23 @@ int main() {
 					continue;
 				}
 
-
-//				if (kbdbuf.keycode[0] == 40) {
-//					// do action
-//					// if double enter, then clear
-//				} else if (kbdbuf.keycode[0] == 42) {
-//					CLEAR_INPUT();
-//				} else {
-//					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44)))
-//						DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
-//				}
-
-				if (idx == 8) {
-					xil_printf("Data Collected is: ");
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store[i]);
-					}
-
-					xil_printf("----------------------\n");
-					idx = 0;
-					Parser();
-
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store_encrypt[i]);
-					}
-					xil_printf("----------------------\n");
-
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store_decrypt[i]);
-					}
-					xil_printf("----------------------\n");
+				if (kbdbuf.keycode[0] == 40) {
+					CLEAR();
+					do_copying();
+				} else if (kbdbuf.keycode[0] == 42) {
+					CLEAR_INPUT();
+					idx -= 1;
 				} else {
-					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
-						store[idx] = kbdbuf.keycode[0];
-						idx += 1;
+					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44))) {
+						if (idx < 256) {
+							DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
+							buffer[idx] = kbdbuf.keycode[0];
+							idx += 1;
+						}
 					}
+
 				}
-				//Modify to output the last 2 keycodes on channel 2.
-				// xil_printf("\n");
-				xil_printf("----- Still collecting data ------\n");
+
 			}
 
 			else if (device == 2) {
