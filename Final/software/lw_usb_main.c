@@ -7,6 +7,7 @@
 #include "lw_usb/usb_ch9.h"
 #include "lw_usb/transfer.h"
 #include "lw_usb/HID.h"
+#include "hdmi_text_controller.h"
 
 #include "xparameters.h"
 #include <xgpio.h>
@@ -82,7 +83,15 @@ char MAP(unsigned char a) {
 	return a % 128;
 }
 
-void Parser(uint32_t en0, uint32_t en1, uint32_t de0, uint32_t de1) {
+void Parser() {
+	printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
+	printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+
+	uint32_t en0 = *encrypt0;
+	uint32_t en1 = *encrypt1;
+	uint32_t de0 = *decrypt0;
+	uint32_t de1 = *decrypt1;
+
 	store_encrypt[7] = (en1 & 0xff000000) >> 24;
 	store_encrypt[6] = (en1 & 0x00ff0000) >> 16;
 	store_encrypt[5] = (en1 & 0x0000ff00) >> 8;
@@ -125,6 +134,7 @@ int main() {
 	MAX3421E_init();
 	xil_printf("initializing USB...\n");
 	USB_init();
+	INIT();
 	while (1) {
 		xil_printf("."); //A tick here means one loop through the USB main handler
 		MAX3421E_Task();
@@ -143,20 +153,16 @@ int main() {
 					xil_printf("%x \n", rcode);
 					continue;
 				}
-//				for (int i = 0; i < 6; i++) {
-//					xil_printf("%x ", kbdbuf.keycode[i]);
-//				}
-				//Outputs the first 4 keycodes using the USB GPIO channel 1
+
 				if (idx == 8) {
 					xil_printf("Data Collected is: ");
 					for (int i = 0; i < 8; i++) {
 						xil_printf("%x ", store[i]);
 					}
-					printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
-					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+
 					xil_printf("----------------------\n");
 					idx = 0;
-					Parser(*encrypt0, *encrypt1, *decrypt0, *decrypt1);
+					Parser();
 
 					for (int i = 0; i < 8; i++) {
 						xil_printf("%x ", store_encrypt[i]);
@@ -176,6 +182,7 @@ int main() {
 				//Modify to output the last 2 keycodes on channel 2.
 				// xil_printf("\n");
 				xil_printf("----- Still collecting data ------\n");
+				hdmiTestWeek1();
 			}
 
 			else if (device == 2) {
