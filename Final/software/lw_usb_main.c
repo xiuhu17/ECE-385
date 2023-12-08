@@ -7,6 +7,7 @@
 #include "lw_usb/usb_ch9.h"
 #include "lw_usb/transfer.h"
 #include "lw_usb/HID.h"
+#include "hdmi_text_controller.h"
 
 #include "xparameters.h"
 #include <xgpio.h>
@@ -66,11 +67,34 @@ uint32_t* decrypt0 = XPAR_READ_DECRYPT_0_BASEADDR;
 uint32_t* decrypt1 = XPAR_READ_DECRYPT_1_BASEADDR;
 
 
+unsigned char buffer[64];
 unsigned char store[8]; // input: store[0] ----> store[7]
 unsigned char store_encrypt[8];
 unsigned char store_decrypt[8];
 
-void Parser(uint32_t en0, uint32_t en1, uint32_t de0, uint32_t de1) {
+char MAP(unsigned char a) {
+	if (a >= 4 && a <= 29) {
+		return a + 61;
+	} else if (a == 39) {
+		return 48;
+	} else if (a >= 30 && a <= 38) {
+		return a + 19;
+	} else if (a == 44) {
+		return 32;
+	}
+
+	return a % 128;
+}
+
+void Parser() {
+	printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
+	printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+
+	uint32_t en0 = *encrypt0;
+	uint32_t en1 = *encrypt1;
+	uint32_t de0 = *decrypt0;
+	uint32_t de1 = *decrypt1;
+
 	store_encrypt[7] = (en1 & 0xff000000) >> 24;
 	store_encrypt[6] = (en1 & 0x00ff0000) >> 16;
 	store_encrypt[5] = (en1 & 0x0000ff00) >> 8;
@@ -113,6 +137,8 @@ int main() {
 	MAX3421E_init();
 	xil_printf("initializing USB...\n");
 	USB_init();
+	INIT();
+
 	while (1) {
 		xil_printf("."); //A tick here means one loop through the USB main handler
 		MAX3421E_Task();
@@ -131,20 +157,27 @@ int main() {
 					xil_printf("%x \n", rcode);
 					continue;
 				}
-//				for (int i = 0; i < 6; i++) {
-//					xil_printf("%x ", kbdbuf.keycode[i]);
+
+
+//				if (kbdbuf.keycode[0] == 40) {
+//					// do action
+//					// if double enter, then clear
+//				} else if (kbdbuf.keycode[0] == 42) {
+//					CLEAR_INPUT();
+//				} else {
+//					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44)))
+//						DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
 //				}
-				//Outputs the first 4 keycodes using the USB GPIO channel 1
+
 				if (idx == 8) {
 					xil_printf("Data Collected is: ");
 					for (int i = 0; i < 8; i++) {
 						xil_printf("%x ", store[i]);
 					}
-					printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
-					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+
 					xil_printf("----------------------\n");
 					idx = 0;
-					Parser(*encrypt0, *encrypt1, *decrypt0, *decrypt1);
+					Parser();
 
 					for (int i = 0; i < 8; i++) {
 						xil_printf("%x ", store_encrypt[i]);
