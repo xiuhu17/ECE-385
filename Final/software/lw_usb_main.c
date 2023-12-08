@@ -59,6 +59,37 @@ void printHex (u32 data, unsigned channel)
 	XGpio_DiscreteWrite (&Gpio_hex, channel, data);
 }
 
+
+uint32_t* encrypt0 = XPAR_READ_ENCRYPT_0_BASEADDR;
+uint32_t* encrypt1 = XPAR_READ_ENCRYPT_1_BASEADDR;
+uint32_t* decrypt0 = XPAR_READ_DECRYPT_0_BASEADDR;
+uint32_t* decrypt1 = XPAR_READ_DECRYPT_1_BASEADDR;
+
+
+unsigned char store[8]; // input: store[0] ----> store[7]
+unsigned char store_encrypt[8];
+unsigned char store_decrypt[8];
+
+void Parser(uint32_t en0, uint32_t en1, uint32_t de0, uint32_t de1) {
+	store_encrypt[7] = (en1 & 0xff000000) >> 24;
+	store_encrypt[6] = (en1 & 0x00ff0000) >> 16;
+	store_encrypt[5] = (en1 & 0x0000ff00) >> 8;
+	store_encrypt[4] = (en1 & 0x000000ff);
+	store_encrypt[3] = (en0 & 0xff000000) >> 24;
+	store_encrypt[2] = (en0 & 0x00ff0000) >> 16;
+	store_encrypt[1] = (en0 & 0x0000ff00) >> 8;
+	store_encrypt[0] = (en0 & 0x000000ff);
+
+	store_decrypt[7] = (de1 & 0xff000000) >> 24;
+	store_decrypt[6] = (de1 & 0x00ff0000) >> 16;
+	store_decrypt[5] = (de1 & 0x0000ff00) >> 8;
+	store_decrypt[4] = (de1 & 0x000000ff);
+	store_decrypt[3] = (de0 & 0xff000000) >> 24;
+	store_decrypt[2] = (de0 & 0x00ff0000) >> 16;
+	store_decrypt[1] = (de0 & 0x0000ff00) >> 8;
+	store_decrypt[0] = (de0 & 0x000000ff);
+}
+
 int main() {
 	//////////////////////////////////////////////////////////
 	// need a map for translation
@@ -77,10 +108,6 @@ int main() {
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
 	int idx = 0;
-	unsigned char store[8];
-
-	uint64_t* encrypt = XPAR_READ_ENCRYPT_BASEADDR;
-	uint64_t* decrypt = XPAR_READ_DECRYPT_BASEADDR;
 
 	xil_printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -109,16 +136,25 @@ int main() {
 //				}
 				//Outputs the first 4 keycodes using the USB GPIO channel 1
 				if (idx == 8) {
-					xil_printf("Data Collected: ");
+					xil_printf("Data Collected is: ");
 					for (int i = 0; i < 8; i++) {
 						xil_printf("%x ", store[i]);
 					}
 					printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
 					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
-					xil_printf("-------------------------------------- \n");
+					xil_printf("----------------------\n");
 					idx = 0;
-					xil_printf("--------------Data after Encrypt is: %u \n", *encrypt);
-					xil_printf("--------------Data after Decrypt is: %u \n", *decrypt);
+					Parser(*encrypt0, *encrypt1, *decrypt0, *decrypt1);
+
+					for (int i = 0; i < 8; i++) {
+						xil_printf("%x ", store_encrypt[i]);
+					}
+					xil_printf("----------------------\n");
+
+					for (int i = 0; i < 8; i++) {
+						xil_printf("%x ", store_decrypt[i]);
+					}
+					xil_printf("----------------------\n");
 				} else {
 					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
 						store[idx] = kbdbuf.keycode[0];
