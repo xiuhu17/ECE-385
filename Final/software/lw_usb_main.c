@@ -60,6 +60,9 @@ void printHex (u32 data, unsigned channel)
 }
 
 int main() {
+	//////////////////////////////////////////////////////////
+	// need a map for translation
+	//////////////////////////////////////////////////////////
     init_platform();
     XGpio_Initialize(&Gpio_hex, XPAR_GPIO_USB_KEYCODE_DEVICE_ID);
    	XGpio_SetDataDirection(&Gpio_hex, 1, 0x00000000); //configure hex display GPIO
@@ -73,6 +76,11 @@ int main() {
 	BYTE runningdebugflag = 0;//flag to dump out a bunch of information when we first get to USB_STATE_RUNNING
 	BYTE errorflag = 0; //flag once we get an error device so we don't keep dumping out state info
 	BYTE device;
+	int idx = 0;
+	unsigned char store[8];
+
+	uint64_t* encrypt = XPAR_READ_ENCRYPT_BASEADDR;
+	uint64_t* decrypt = XPAR_READ_DECRYPT_BASEADDR;
 
 	xil_printf("initializing MAX3421E...\n");
 	MAX3421E_init();
@@ -96,14 +104,30 @@ int main() {
 					xil_printf("%x \n", rcode);
 					continue;
 				}
-				xil_printf("keycodes: ");
-				for (int i = 0; i < 6; i++) {
-					xil_printf("%x ", kbdbuf.keycode[i]);
-				}
+//				for (int i = 0; i < 6; i++) {
+//					xil_printf("%x ", kbdbuf.keycode[i]);
+//				}
 				//Outputs the first 4 keycodes using the USB GPIO channel 1
-				printHex (kbdbuf.keycode[0] + (kbdbuf.keycode[1]<<8) + (kbdbuf.keycode[2]<<16) + + (kbdbuf.keycode[3]<<24), 1);
+				if (idx == 8) {
+					xil_printf("Data Collected: ");
+					for (int i = 0; i < 8; i++) {
+						xil_printf("%x ", store[i]);
+					}
+					printHex(store[0] + (store[1]<<8) + (store[2]<<16) + + (store[3]<<24), 1);
+					printHex(store[4] + (store[5]<<8) + (store[6]<<16) + + (store[7]<<24), 2);
+					xil_printf("-------------------------------------- \n");
+					idx = 0;
+					xil_printf("--------------Data after Encrypt is: %u \n", *encrypt);
+					xil_printf("--------------Data after Decrypt is: %u \n", *decrypt);
+				} else {
+					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
+						store[idx] = kbdbuf.keycode[0];
+						idx += 1;
+					}
+				}
 				//Modify to output the last 2 keycodes on channel 2.
-				xil_printf("\n");
+				// xil_printf("\n");
+				xil_printf("----- Still collecting data ------\n");
 			}
 
 			else if (device == 2) {
