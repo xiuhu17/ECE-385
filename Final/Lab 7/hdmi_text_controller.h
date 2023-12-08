@@ -82,7 +82,7 @@
  * @note    Self test may fail if data memory and device are not on the same bus.
  *
  */
- 
+
 struct HDMI_TEXT_STRUCT {
 	uint8_t  VRAM [ROWS*COLUMNS];
 	uint32_t CTRL;
@@ -93,6 +93,8 @@ static volatile struct HDMI_TEXT_STRUCT* hdmi_ctrl = XPAR_HDMI_TEXT_CONTROLLER_0
 
 void hdmiSetColor(int background, int foreground);
 void hdmiClr();
-void hdmiTestWeek1(); //Call this function from your main function for your demo.
+void DOWRITE_INPUT(char input); //Call this function from your main function for your demo.
+void CLEAR_INPUT();
+void INIT();
 
 #endif // HDMI_TEXT_CONTROLLER_H

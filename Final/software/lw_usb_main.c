@@ -67,6 +67,7 @@ uint32_t* decrypt0 = XPAR_READ_DECRYPT_0_BASEADDR;
 uint32_t* decrypt1 = XPAR_READ_DECRYPT_1_BASEADDR;
 
 
+unsigned char buffer[64];
 unsigned char store[8]; // input: store[0] ----> store[7]
 unsigned char store_encrypt[8];
 unsigned char store_decrypt[8];
@@ -78,6 +79,8 @@ char MAP(unsigned char a) {
 		return 48;
 	} else if (a >= 30 && a <= 38) {
 		return a + 19;
+	} else if (a == 44) {
+		return 32;
 	}
 
 	return a % 128;
@@ -135,6 +138,7 @@ int main() {
 	xil_printf("initializing USB...\n");
 	USB_init();
 	INIT();
+
 	while (1) {
 		xil_printf("."); //A tick here means one loop through the USB main handler
 		MAX3421E_Task();
@@ -153,6 +157,17 @@ int main() {
 					xil_printf("%x \n", rcode);
 					continue;
 				}
+
+
+//				if (kbdbuf.keycode[0] == 40) {
+//					// do action
+//					// if double enter, then clear
+//				} else if (kbdbuf.keycode[0] == 42) {
+//					CLEAR_INPUT();
+//				} else {
+//					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44)))
+//						DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
+//				}
 
 				if (idx == 8) {
 					xil_printf("Data Collected is: ");
@@ -182,7 +197,6 @@ int main() {
 				//Modify to output the last 2 keycodes on channel 2.
 				// xil_printf("\n");
 				xil_printf("----- Still collecting data ------\n");
-				hdmiTestWeek1();
 			}
 
 			else if (device == 2) {
