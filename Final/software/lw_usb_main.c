@@ -70,6 +70,18 @@ unsigned char store[8]; // input: store[0] ----> store[7]
 unsigned char store_encrypt[8];
 unsigned char store_decrypt[8];
 
+char MAP(unsigned char a) {
+	if (a >= 4 && a <= 29) {
+		return a + 61;
+	} else if (a == 39) {
+		return 48;
+	} else if (a >= 30 && a <= 38) {
+		return a + 19;
+	}
+
+	return a % 128;
+}
+
 void Parser(uint32_t en0, uint32_t en1, uint32_t de0, uint32_t de1) {
 	store_encrypt[7] = (en1 & 0xff000000) >> 24;
 	store_encrypt[6] = (en1 & 0x00ff0000) >> 16;
