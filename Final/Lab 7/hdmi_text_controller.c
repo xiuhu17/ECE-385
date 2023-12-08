@@ -71,3 +71,28 @@ void CLEAR_INPUT() {
 	char input = ' ';
 	memcpy((void*)&hdmi_ctrl->VRAM[INPUT_CURR_POS], &input, 1);
 }
+
+void DOWRITE(char en, char de)
+{
+	memcpy((void*)&hdmi_ctrl->VRAM[ENCRYPT_CURR_POS], &en, 1);
+	memcpy((void*)&hdmi_ctrl->VRAM[DECRYPT_CURR_POS], &de, 1);
+	ENCRYPT_CURR_POS += 1;
+	DECRYPT_CURR_POS += 1;
+}
+
+void CLEAR() {
+	char input = ' ';
+	while (ENCRYPT_CURR_POS >= ENCRYPT_RESET_POS) {
+		if (ENCRYPT_CURR_POS == ENCRYPT_RESET_POS) {
+				return;
+			}
+
+		if (ENCRYPT_CURR_POS - 1 == ENCRYPT_RESET_POS) {
+				return;
+		}
+		memcpy((void*)&hdmi_ctrl->VRAM[ENCRYPT_CURR_POS], &input, 1);
+		memcpy((void*)&hdmi_ctrl->VRAM[DECRYPT_CURR_POS], &input, 1);
+		ENCRYPT_CURR_POS -= 1;
+		DECRYPT_CURR_POS -= 1;
+	}
+}
