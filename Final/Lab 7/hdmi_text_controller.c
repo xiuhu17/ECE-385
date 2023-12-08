@@ -63,10 +63,11 @@ void CLEAR_INPUT() {
 	if (INPUT_CURR_POS == INPUT_RESET_POS) {
 		return;
 	}
-	INPUT_CURR_POS -= 1;
-	if (INPUT_CURR_POS == INPUT_RESET_POS) {
+
+	if (INPUT_CURR_POS - 1== INPUT_RESET_POS) {
 		return;
 	}
+	INPUT_CURR_POS -= 1;
 	char input = ' ';
 	memcpy((void*)&hdmi_ctrl->VRAM[INPUT_CURR_POS], &input, 1);
 }

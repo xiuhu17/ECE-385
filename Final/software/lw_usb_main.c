@@ -159,44 +159,44 @@ int main() {
 				}
 
 
-//				if (kbdbuf.keycode[0] == 40) {
-//					// do action
-//					// if double enter, then clear
-//				} else if (kbdbuf.keycode[0] == 42) {
-//					CLEAR_INPUT();
-//				} else {
-//					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44)))
-//						DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
-//				}
-
-				if (idx == 8) {
-					xil_printf("Data Collected is: ");
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store[i]);
-					}
-
-					xil_printf("----------------------\n");
-					idx = 0;
-					Parser();
-
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store_encrypt[i]);
-					}
-					xil_printf("----------------------\n");
-
-					for (int i = 0; i < 8; i++) {
-						xil_printf("%x ", store_decrypt[i]);
-					}
-					xil_printf("----------------------\n");
+				if (kbdbuf.keycode[0] == 40) {
+					// do action
+					// if double enter, then clear
+				} else if (kbdbuf.keycode[0] == 42) {
+					CLEAR_INPUT();
 				} else {
-					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
-						store[idx] = kbdbuf.keycode[0];
-						idx += 1;
-					}
+					if ((kbdbuf.keycode[0] >= 4 && kbdbuf.keycode[0] <= 29) || (kbdbuf.keycode[0] >= 30 && kbdbuf.keycode[0] <= 39) || ((kbdbuf.keycode[0] == 44)))
+						DOWRITE_INPUT(MAP(kbdbuf.keycode[0]));
 				}
-				//Modify to output the last 2 keycodes on channel 2.
-				// xil_printf("\n");
-				xil_printf("----- Still collecting data ------\n");
+
+//				if (idx == 8) {
+//					xil_printf("Data Collected is: ");
+//					for (int i = 0; i < 8; i++) {
+//						xil_printf("%x ", store[i]);
+//					}
+//
+//					xil_printf("----------------------\n");
+//					idx = 0;
+//					Parser();
+//
+//					for (int i = 0; i < 8; i++) {
+//						xil_printf("%x ", store_encrypt[i]);
+//					}
+//					xil_printf("----------------------\n");
+//
+//					for (int i = 0; i < 8; i++) {
+//						xil_printf("%x ", store_decrypt[i]);
+//					}
+//					xil_printf("----------------------\n");
+//				} else {
+//					if (kbdbuf.keycode[0] != 0 && kbdbuf.keycode[0] != 1 && kbdbuf.keycode[0] != 2 && kbdbuf.keycode[0] != 3) {
+//						store[idx] = kbdbuf.keycode[0];
+//						idx += 1;
+//					}
+//				}
+//				//Modify to output the last 2 keycodes on channel 2.
+//				// xil_printf("\n");
+//				xil_printf("----- Still collecting data ------\n");
 			}
 
 			else if (device == 2) {
